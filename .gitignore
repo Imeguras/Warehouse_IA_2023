@@ -1,0 +1,10 @@
+# Python Stuff
+__pycache__
+
+
+# Vscode
+.vscode
+*.code-workspace
+
+# Pycharm
+.idea
