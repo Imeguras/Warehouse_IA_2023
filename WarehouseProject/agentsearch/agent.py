@@ -4,11 +4,6 @@ from agentsearch.heuristic import Heuristic
 from search_methods.astar_search import AStarSearch
 from search_methods.solution import Solution
 
-#Todo Implement the Agent class
-#Body Test
-
-#Todo Test
-#Body Implement the Agent class
 class Agent:
 
     def __init__(self):
