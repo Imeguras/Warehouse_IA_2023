@@ -11,8 +11,7 @@ class WarehouseState(State[Action]):
 
     def __init__(self, matrix: ndarray, rows, columns):
         super().__init__()
-        # TODO
-
+        # RETODO
         self.rows = rows
         self.columns = columns
         self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
@@ -28,35 +27,35 @@ class WarehouseState(State[Action]):
                     self.column_exit = j
 
     def can_move_up(self) -> bool:
-        # TODO
+        # RETODO
         pass
 
     def can_move_right(self) -> bool:
-        # TODO
+        # RETODO
         pass
 
     def can_move_down(self) -> bool:
-        # TODO
+        # RETODO
         pass
 
     def can_move_left(self) -> bool:
-        # TODO
+        # RETODO
         pass
 
     def move_up(self) -> None:
-        # TODO
+        # RETODO
         pass
 
     def move_right(self) -> None:
-        # TODO
+        # RETODO
         pass
 
     def move_down(self) -> None:
-        # TODO
+        # RETODO
         pass
 
     def move_left(self) -> None:
-        # TODO
+        # RETODO
         pass
 
     def get_cell_color(self, row: int, column: int) -> Color:

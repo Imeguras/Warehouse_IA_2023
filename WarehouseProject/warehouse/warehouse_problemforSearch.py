@@ -27,6 +27,6 @@ class WarehouseProblemSearch(Problem[WarehouseState]):
         return successor
 
     def is_goal(self, state: WarehouseState) -> bool:
-        # TODO
+        # RETODO
         pass
 

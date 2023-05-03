@@ -6,7 +6,7 @@ class Mutation2(Mutation):
         super().__init__(probability)
 
     def mutate(self, ind: IntVectorIndividual) -> None:
-        # TODO
+        # RETODO
         pass
 
     def __str__(self):

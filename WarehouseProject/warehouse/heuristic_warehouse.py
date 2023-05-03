@@ -9,9 +9,10 @@ class HeuristicWarehouse(Heuristic[WarehouseProblemSearch, WarehouseState]):
         super().__init__()
 
     def compute(self, state: WarehouseState) -> float:
-        # TODO
+        # RETODO
         pass
 
     def __str__(self):
-        return "# TODO"
+        # RETODO
+        return ""
 
