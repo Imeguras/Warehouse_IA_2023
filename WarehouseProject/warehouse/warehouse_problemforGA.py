@@ -12,7 +12,6 @@ class WarehouseProblemGA(Problem):
 
     def generate_individual(self) -> "WarehouseIndividual":
         # RETODO
-
         pass
 
     def __str__(self):
