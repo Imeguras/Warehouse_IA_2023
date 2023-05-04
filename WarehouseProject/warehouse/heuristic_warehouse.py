@@ -9,7 +9,7 @@ class HeuristicWarehouse(Heuristic[WarehouseProblemSearch, WarehouseState]):
         super().__init__()
 
     def compute(self, state: WarehouseState) -> float:
-        # RETODO
+        # TODO compute euclidian distance 
         pass
 
     def __str__(self):
