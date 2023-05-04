@@ -28,6 +28,5 @@ class WarehouseProblemSearch(Problem[WarehouseState]):
 
     def is_goal(self, state: WarehouseState) -> bool:
         # RETODO
-        return self.goal_position == state
         pass
 
