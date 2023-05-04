@@ -25,37 +25,38 @@ class WarehouseState(State[Action]):
                 if self.matrix[i][j] == constants.EXIT:
                     self.line_exit = i
                     self.column_exit = j
-
+    
     def can_move_up(self) -> bool:
-        # RETODO
+        # TODO Can move up
         pass
 
+    
     def can_move_right(self) -> bool:
-        # RETODO
+        # TODO Can move right
         pass
 
     def can_move_down(self) -> bool:
-        # RETODO
+        # TODO Can move down 
         pass
 
     def can_move_left(self) -> bool:
-        # RETODO
+        # TODO Can move left
         pass
 
     def move_up(self) -> None:
-        # RETODO
+        # TODO Move up Logic
         pass
 
     def move_right(self) -> None:
-        # RETODO
+        # TODO Move right Logic
         pass
 
     def move_down(self) -> None:
-        # RETODO
+        # TODO Move down Logic
         pass
 
     def move_left(self) -> None:
-        # RETODO
+        # TODO Move left Logic
         pass
 
     def get_cell_color(self, row: int, column: int) -> Color:
