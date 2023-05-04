@@ -11,7 +11,7 @@ class WarehouseState(State[Action]):
 
     def __init__(self, matrix: ndarray, rows, columns):
         super().__init__()
-        # RETODO
+        
         self.rows = rows
         self.columns = columns
         self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
@@ -25,39 +25,66 @@ class WarehouseState(State[Action]):
                 if self.matrix[i][j] == constants.EXIT:
                     self.line_exit = i
                     self.column_exit = j
-    
+                  
+    #checks if a robot can go to a certain position
+    def is_passageway(self, x, y) -> bool: 
+      point = point
+      if(point is not null and (point == constants.FORKLIFT or  point == constants.EMPTY)):
+        return true;  
+      return false
+
+
     def can_move_up(self) -> bool:
-        # TODO Can move up
-        pass
+        if line_forklift - 1 >= 0 and is_passageway(line_forklift - 1, column_forklift) : 
+          return true 
+        return false
 
     
     def can_move_right(self) -> bool:
-        # TODO Can move right
-        pass
+        if column_forklift + 1 < self.columns and is_passageway(line_forklift , column_forklift + 1) : 
+          return true 
+        return false
+        
 
     def can_move_down(self) -> bool:
-        # TODO Can move down 
-        pass
+        if line_forklift + 1 < self.rows and is_passageway(line_forklift + 1, column_forklift) : 
+          return true 
+        return false
 
     def can_move_left(self) -> bool:
-        # TODO Can move left
-        pass
+        if column_forklift - 1 >= 0 and is_passageway(line_forklift - 1, column_forklift) : 
+          return true 
+        return false
+    #this tipically should be used with forklifts
+    def move_object(self, x, y, x1, y1): 
+      #this will need to change in case of colisions 
+      previousOcuppier = self.matrix[x][y]
+      self.matrix[x][y] = constants.EMPTY
+      self.matrix[x1][y1]= previousOcuppier
+      
 
     def move_up(self) -> None:
-        # TODO Move up Logic
-        pass
+      if can_move_up():
+        axis = line_forklift -1
+        move_object(line_forklift,column_forklift, axis,column_forklift)
+        
+        
 
     def move_right(self) -> None:
-        # TODO Move right Logic
-        pass
+      if can_move_right():
+        axis = column_forklift + 1
+        move_object(line_forklift,column_forklift, line_forklift, axis)
 
     def move_down(self) -> None:
-        # TODO Move down Logic
-        pass
+      if can_move_down():
+        axis = line_forklift + 1
+        move_object(line_forklift,column_forklift, axis, column_forklift)
+
 
     def move_left(self) -> None:
-        # TODO Move left Logic
-        pass
+      if can_move_left(): 
+        axis = column_forklift - 1
+        move_object(line_forklift,column_forklift, line_forklift , axis)
 
     def get_cell_color(self, row: int, column: int) -> Color:
         if row == self.line_exit and column == self.column_exit and (
