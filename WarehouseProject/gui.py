@@ -619,9 +619,11 @@ class SearchSolver(threading.Thread):
 
     def run(self):
         # TODO calculate pairs distances
-
         self.agent.search_method.stopped=True
         self.gui.problem_ga = WarehouseProblemGA(self.agent)
+        
+        self.agent.search_method.search(self.gui.problem_ga)
+
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
                                 simulation=tk.DISABLED, stop_simulation=tk.DISABLED)

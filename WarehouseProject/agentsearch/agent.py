@@ -4,7 +4,6 @@ from agentsearch.heuristic import Heuristic
 from search_methods.astar_search import AStarSearch
 from search_methods.solution import Solution
 
-
 class Agent:
 
     def __init__(self):
@@ -12,6 +11,7 @@ class Agent:
         self.search_method = AStarSearch()
         self.heuristic = None
         self.solution = None
+      
 
     def solve_problem(self, problem: Problem) -> Solution:
         self.environment = problem.initial_state

@@ -1,3 +1,5 @@
+import math
+
 from agentsearch.heuristic import Heuristic
 from warehouse.warehouse_problemforSearch import WarehouseProblemSearch
 from warehouse.warehouse_state import WarehouseState
@@ -9,9 +11,13 @@ class HeuristicWarehouse(Heuristic[WarehouseProblemSearch, WarehouseState]):
         super().__init__()
 
     def compute(self, state: WarehouseState) -> float:
-        # TODO
+        # RETODO - Done - Unverified
+        goal = self.problem().goal_position
+        h = math.sqrt( (state.line_forklift - goal.line)**2 + (state.column_forklift - goal.column)**2 )
+        return h
         pass
 
     def __str__(self):
-        return "# TODO"
+        # RETODO
+        return ""
 
