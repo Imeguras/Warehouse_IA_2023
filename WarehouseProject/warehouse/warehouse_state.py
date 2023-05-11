@@ -35,24 +35,24 @@ class WarehouseState(State[Action]):
 
 
     def can_move_up(self) -> bool:
-        if line_forklift - 1 >= 0 and is_passageway(line_forklift - 1, column_forklift) : 
+        if line_forklift - 1 >= 0 and is_passageway(self.line_forklift - 1, self.column_forklift) : 
           return true 
         return false
 
     
     def can_move_right(self) -> bool:
-        if column_forklift + 1 < self.columns and is_passageway(line_forklift , column_forklift + 1) : 
+        if self.column_forklift + 1 < self.columns and is_passageway(self.line_forklift , self.column_forklift + 1) : 
           return true 
         return false
         
 
     def can_move_down(self) -> bool:
-        if line_forklift + 1 < self.rows and is_passageway(line_forklift + 1, column_forklift) : 
+        if self.line_forklift + 1 < self.rows and is_passageway(self.line_forklift + 1, self.column_forklift) : 
           return true 
         return false
 
     def can_move_left(self) -> bool:
-        if column_forklift - 1 >= 0 and is_passageway(line_forklift - 1, column_forklift) : 
+        if self.column_forklift - 1 >= 0 and is_passageway(self.line_forklift - 1, self.column_forklift) : 
           return true 
         return false
     #this tipically should be used with forklifts
@@ -61,30 +61,33 @@ class WarehouseState(State[Action]):
       previousOcuppier = self.matrix[x][y]
       self.matrix[x][y] = constants.EMPTY
       self.matrix[x1][y1]= previousOcuppier
-      
+      if self.matrix[x1][y1] == constants.FORKLIFT:
+        self.line_forklift = x1
+        self.column_forklift = y1
+
 
     def move_up(self) -> None:
       if can_move_up():
-        axis = line_forklift -1
-        move_object(line_forklift,column_forklift, axis,column_forklift)
+        axis = self.line_forklift -1
+        move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
         
         
 
     def move_right(self) -> None:
       if can_move_right():
-        axis = column_forklift + 1
-        move_object(line_forklift,column_forklift, line_forklift, axis)
+        axis = self.column_forklift + 1
+        move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
 
     def move_down(self) -> None:
       if can_move_down():
-        axis = line_forklift + 1
-        move_object(line_forklift,column_forklift, axis, column_forklift)
+        axis = self.line_forklift + 1
+        move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
 
 
     def move_left(self) -> None:
       if can_move_left(): 
-        axis = column_forklift - 1
-        move_object(line_forklift,column_forklift, line_forklift , axis)
+        axis = self.column_forklift - 1
+        move_object(self.line_forklift,self.column_forklift, self.line_forklift , axis)
 
     def get_cell_color(self, row: int, column: int) -> Color:
         if row == self.line_exit and column == self.column_exit and (

@@ -19,6 +19,7 @@ class InformedSearch(GraphSearch[NodePriorityQueue]):
         self.reset()
         self.stopped = False
         self.heuristic = problem.heuristic
+        
         return self.graph_search(problem)
 
     @abstractmethod
