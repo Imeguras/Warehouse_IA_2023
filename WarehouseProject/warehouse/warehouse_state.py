@@ -26,35 +26,37 @@ class WarehouseState(State[Action]):
                     self.line_exit = i
                     self.column_exit = j
                   
+    
+
+
     #checks if a robot can go to a certain position
     def is_passageway(self, x, y) -> bool: 
-      point = point
-      if(point is not null and (point == constants.FORKLIFT or  point == constants.EMPTY)):
+      point = self.matrix[x][y]
+      if(point is not None and (point == constants.FORKLIFT or  point == constants.EMPTY)):
         return true;  
-      return false
-
+      return False
 
     def can_move_up(self) -> bool:
-        if line_forklift - 1 >= 0 and is_passageway(self.line_forklift - 1, self.column_forklift) : 
+        if self.line_forklift - 1 >= 0 and self.is_passageway(self.line_forklift - 1, self.column_forklift) : 
           return true 
-        return false
+        return False
 
     
     def can_move_right(self) -> bool:
-        if self.column_forklift + 1 < self.columns and is_passageway(self.line_forklift , self.column_forklift + 1) : 
+        if self.column_forklift + 1 < self.columns and self.is_passageway(self.line_forklift , self.column_forklift + 1) : 
           return true 
-        return false
+        return False
         
 
     def can_move_down(self) -> bool:
-        if self.line_forklift + 1 < self.rows and is_passageway(self.line_forklift + 1, self.column_forklift) : 
+        if self.line_forklift + 1 < self.rows and self.is_passageway(self.line_forklift + 1, self.column_forklift) : 
           return true 
-        return false
+        return False
 
     def can_move_left(self) -> bool:
-        if self.column_forklift - 1 >= 0 and is_passageway(self.line_forklift - 1, self.column_forklift) : 
+        if self.column_forklift - 1 >= 0 and self.is_passageway(self.line_forklift - 1, self.column_forklift) : 
           return true 
-        return false
+        return False
     #this tipically should be used with forklifts
     def move_object(self, x, y, x1, y1): 
       #this will need to change in case of colisions 

@@ -626,11 +626,10 @@ class SearchSolver(threading.Thread):
         for i in self.agent.pairs:
           teleportForklifts=copy.deepcopy(self.agent.initial_environment)
           teleportForklifts.move_object(teleportForklifts.line_forklift, teleportForklifts.column_forklift,i.cell1.line, i.cell1.column) 
-          test = WarehouseProblemSearch(teleportForklifts,i.cell2)
-          test.heuristic = HeuristicWarehouse()
-          test.heuristic.problem = test
-          i.value =  test.heuristic.compute(teleportForklifts)
-          
+          problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
+          solution_a = self.agent.solve_problem(problem)
+          # TOFIX: solution_a has no cost
+          i.value = solution_a.cost
         self.gui.text_problem.insert(tk.END, str(self.agent))
           
           
