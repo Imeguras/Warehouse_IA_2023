@@ -38,13 +38,13 @@ class WarehouseState(State[Action]):
       
     def can_move_down(self) -> bool:
       _is_passageway= lambda: self.is_passageway(self.line_forklift + 1, self.column_forklift)
-      if self.line_forklift + 1 < self.rows and _is_passageway : 
+      if self.line_forklift + 1 < self.rows and _is_passageway() : 
         return True 
       return False
 
     def can_move_up(self) -> bool:
       _is_passageway= lambda: self.is_passageway(self.line_forklift - 1, self.column_forklift)
-      if self.line_forklift - 1 >= 0 and _is_passageway : 
+      if self.line_forklift - 1 >= 0 and _is_passageway() : 
         return True 
       return False
 
@@ -52,13 +52,13 @@ class WarehouseState(State[Action]):
     
     def can_move_right(self) -> bool:
       _is_passageway = lambda: self.is_passageway(self.line_forklift , self.column_forklift + 1) 
-      if self.column_forklift + 1 < self.columns and _is_passageway: 
+      if self.column_forklift + 1 < self.columns and _is_passageway(): 
         return True 
       return False
 
     def can_move_left(self) -> bool:
       _is_passageway = lambda: self.is_passageway(self.line_forklift, self.column_forklift - 1)
-      if self.column_forklift - 1 >= 0 and _is_passageway: 
+      if self.column_forklift - 1 >= 0 and _is_passageway(): 
         return True 
       return False
     #this tipically should be used with forklifts
@@ -71,24 +71,23 @@ class WarehouseState(State[Action]):
         self.line_forklift = x1
         self.column_forklift = y1
 
+    def move_down(self) -> None:
+      if self.can_move_down():
+        axis = self.line_forklift + 1
+        self.move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
+
 
     def move_up(self) -> None:
       if self.can_move_up():
         axis = self.line_forklift -1
         self.move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
         
-        
 
+   
     def move_right(self) -> None:
       if self.can_move_right():
         axis = self.column_forklift + 1
         self.move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
-
-    def move_down(self) -> None:
-      if self.can_move_down():
-        axis = self.line_forklift + 1
-        self.move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
-
 
     def move_left(self) -> None:
       if self.can_move_left(): 
