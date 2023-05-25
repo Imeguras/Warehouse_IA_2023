@@ -33,7 +33,7 @@ class WarehouseState(State[Action]):
     def is_passageway(self, x, y) -> bool: 
       point = self.matrix[x][y]
       if(point is not None and (point == constants.FORKLIFT or  point == constants.EMPTY)):
-        return True;  
+        return True
       return False
       
     def can_move_down(self) -> bool:

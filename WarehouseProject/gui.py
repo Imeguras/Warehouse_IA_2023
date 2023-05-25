@@ -630,6 +630,7 @@ class SearchSolver(threading.Thread):
           solution_a = self.agent.solve_problem(problem)
           # TOFIX: solution_a has no cost
           i.value = solution_a.cost
+          
         self.gui.text_problem.insert(tk.END, str(self.agent))
           
           
