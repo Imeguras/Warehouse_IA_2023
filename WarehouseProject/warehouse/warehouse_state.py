@@ -71,25 +71,25 @@ class WarehouseState(State[Action]):
     def move_up(self) -> None:
       if can_move_up():
         axis = self.line_forklift -1
-        move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
+        self.move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
         
         
 
     def move_right(self) -> None:
-      if can_move_right():
+      if self.can_move_right():
         axis = self.column_forklift + 1
-        move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
+        self.move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
 
     def move_down(self) -> None:
-      if can_move_down():
+      if self.can_move_down():
         axis = self.line_forklift + 1
-        move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
+        self.move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
 
 
     def move_left(self) -> None:
-      if can_move_left(): 
+      if self.can_move_left(): 
         axis = self.column_forklift - 1
-        move_object(self.line_forklift,self.column_forklift, self.line_forklift , axis)
+        self.move_object(self.line_forklift,self.column_forklift, self.line_forklift , axis)
 
     def get_cell_color(self, row: int, column: int) -> Color:
         if row == self.line_exit and column == self.column_exit and (
