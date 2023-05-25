@@ -31,7 +31,8 @@ class WarehouseProblemSearch(Problem[WarehouseState]):
     def is_goal(self, state: WarehouseState) -> bool:
       # if the agent is adjacent to the goal return true 
       # for this check the manhattan distance and see if its equal or smaller than 1
-      if abs(state.line_forklift - self.goal_position.line) + abs(state.column_forklift - self.goal_position.column) <=1:
+      manhattan_distance = abs(state.line_forklift - self.goal_position.line) + abs(state.column_forklift - self.goal_position.column)
+      if manhattan_distance <=1:
         return True
       return False
 

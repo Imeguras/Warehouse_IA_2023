@@ -33,29 +33,29 @@ class WarehouseState(State[Action]):
     def is_passageway(self, x, y) -> bool: 
       point = self.matrix[x][y]
       if(point is not None and (point == constants.FORKLIFT or  point == constants.EMPTY)):
-        return true;  
+        return True;  
       return False
 
     def can_move_up(self) -> bool:
         if self.line_forklift - 1 >= 0 and self.is_passageway(self.line_forklift - 1, self.column_forklift) : 
-          return true 
+          return True 
         return False
 
     
     def can_move_right(self) -> bool:
         if self.column_forklift + 1 < self.columns and self.is_passageway(self.line_forklift , self.column_forklift + 1) : 
-          return true 
+          return True 
         return False
         
 
     def can_move_down(self) -> bool:
         if self.line_forklift + 1 < self.rows and self.is_passageway(self.line_forklift + 1, self.column_forklift) : 
-          return true 
+          return True 
         return False
 
     def can_move_left(self) -> bool:
         if self.column_forklift - 1 >= 0 and self.is_passageway(self.line_forklift - 1, self.column_forklift) : 
-          return true 
+          return True 
         return False
     #this tipically should be used with forklifts
     def move_object(self, x, y, x1, y1): 
