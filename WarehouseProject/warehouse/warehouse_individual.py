@@ -7,11 +7,11 @@ class WarehouseIndividual(IntVectorIndividual):
         # RETODO 
 
     def compute_fitness(self) -> float:
-        # RETODO
+        # TODO implement a fitness function for warehouse individual
         return 0
 
     def obtain_all_path(self):
-        # RETODO
+        # TODO implement a method to obtain all paths from the genome
         pass
 
     def __str__(self):
