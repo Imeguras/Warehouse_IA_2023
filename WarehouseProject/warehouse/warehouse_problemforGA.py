@@ -16,7 +16,7 @@ class WarehouseProblemGA(Problem):
           s = WarehouseProblemSearch(agent_search.initial_environment, i)
 
     def generate_individual(self) -> "WarehouseIndividual":
-        # RETODO
+        # TODO implement a method to generate a random individual
         pass
 
     def __str__(self):

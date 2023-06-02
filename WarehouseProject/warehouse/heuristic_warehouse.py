@@ -16,6 +16,6 @@ class HeuristicWarehouse(Heuristic[WarehouseProblemSearch, WarehouseState]):
         return h
 
     def __str__(self):
-        # RETODO
+        # TODO change the name of the heuristic
         return ""
 
