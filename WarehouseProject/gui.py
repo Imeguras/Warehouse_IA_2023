@@ -9,6 +9,8 @@ from matplotlib.figure import Figure
 from warehouse.heuristic_warehouse import HeuristicWarehouse
 import queue
 import threading
+import os
+from pathlib import Path
 
 import constants
 from ga.genetic_operators.mutation2 import Mutation2
@@ -263,10 +265,19 @@ class Window(tk.Tk):
         self.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.DISABLED, stop=tk.DISABLED,
                             open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
                             simulation=tk.DISABLED, stop_simulation=tk.DISABLED)
+
+        if not (os.path.isfile('last_problem.txt')):
+            Path('last_problem.txt')
+        else:
+            self.default_problem()
         # End of constructor -----------------------------------
 
     def problem_button_clicked(self):
         filename = fd.askopenfilename(initialdir='.')
+        f = open('last_problem.txt','w')
+        f.write(filename)
+        f.close
+
         if filename:
             matrix, num_rows, num_columns = read_state_from_txt_file(filename)
             self.initial_state = WarehouseState(matrix, num_rows, num_columns)
@@ -285,6 +296,29 @@ class Window(tk.Tk):
             self.canvas.pack()
             self.draw_state(self.initial_state)
 
+    def default_problem(self):
+        # filename = fd.askopenfilename(initialdir='.')
+        f = open('last_problem.txt','r')
+        filename = f.read()
+        f.close
+
+        if filename:
+            matrix, num_rows, num_columns = read_state_from_txt_file(filename)
+            self.initial_state = WarehouseState(matrix, num_rows, num_columns)
+            self.agent_search = WarehouseAgentSearch(WarehouseState(matrix, num_rows, num_columns))
+            self.solution = None
+            self.text_problem.delete("1.0", "end")
+            self.text_problem.insert(tk.END, str(self.initial_state) + "\n" + str(self.agent_search))
+            self.entry_status.delete(0, tk.END)
+            self.manage_buttons(data_set=tk.NORMAL, runSearch=tk.NORMAL, runGA=tk.DISABLED, stop=tk.DISABLED,
+                                open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
+                                simulation=tk.DISABLED, stop_simulation=tk.DISABLED)
+            rows = self.initial_state.rows
+            columns = self.initial_state.columns
+            self.canvas.destroy()
+            self.canvas = tk.Canvas(self.panel_sim, bg="white", height=16 * (rows + 2), width=16 * (columns + 2))
+            self.canvas.pack()
+            self.draw_state(self.initial_state)
     def runSearch_button_clicked(self):
 
         self.agent_search.search_method.stopped=False
