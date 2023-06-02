@@ -6,6 +6,7 @@ from tkinter import messagebox
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+from warehouse.heuristic_warehouse import HeuristicWarehouse
 import queue
 import threading
 
@@ -21,8 +22,9 @@ from ga.genetic_algorithm_thread import GeneticAlgorithmThread
 from warehouse.warehouse_agent_search import WarehouseAgentSearch, read_state_from_txt_file
 from warehouse.warehouse_experiments_factory import WarehouseExperimentsFactory
 from warehouse.warehouse_problemforGA import WarehouseProblemGA
+from warehouse.warehouse_problemforSearch import WarehouseProblemSearch
 from warehouse.warehouse_state import WarehouseState
-
+from agentsearch.heuristic import Heuristic
 matplotlib.use("TkAgg")
 
 
@@ -620,14 +622,32 @@ class SearchSolver(threading.Thread):
     def run(self):
         # TODO calculate pairs distances
         self.agent.search_method.stopped=True
-        self.gui.problem_ga = WarehouseProblemGA(self.agent)
         
-        self.agent.search_method.search(self.gui.problem_ga)
+        for i in self.agent.pairs:
+          teleportForklifts=copy.deepcopy(self.agent.initial_environment)
+          teleportForklifts.move_object(teleportForklifts.line_forklift, teleportForklifts.column_forklift,i.cell1.line, i.cell1.column) 
+          test = WarehouseProblemSearch(teleportForklifts,i.cell2)
+          test.heuristic = HeuristicWarehouse()
+          test.heuristic.problem = test
+          i.value =  test.heuristic.compute(teleportForklifts)
+          
+        self.gui.text_problem.insert(tk.END, str(self.agent))
+          
+          
+          
+          
+          
+
+        #self.gui.problem_ga = WarehouseProblemGA(self.agent)
+        
+
+        #self.agent.search_method.search(self.gui.problem_ga)
 
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
                                 simulation=tk.DISABLED, stop_simulation=tk.DISABLED)
         self.gui.frame.event_generate('<<AgentStopped>>', when='tail')
+
 
 
 class SolutionRunner(threading.Thread):

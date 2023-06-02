@@ -11,7 +11,7 @@ class HeuristicWarehouse(Heuristic[WarehouseProblemSearch, WarehouseState]):
         super().__init__()
 
     def compute(self, state: WarehouseState) -> float:
-        goal = self.problem().goal_position
+        goal = self.problem.goal_position
         h = math.sqrt((state.line_forklift - goal.line)**2 + (state.column_forklift - goal.column)**2)
         return h
 
