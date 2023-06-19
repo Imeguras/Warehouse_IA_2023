@@ -12,11 +12,11 @@ class WarehouseProblemGA(Problem):
         self.heuristic = agent_search.heuristic
         self.initial_state = agent_search.initial_environment
         for i in agent_search.pairs: 
-    
           s = WarehouseProblemSearch(agent_search.initial_environment, i)
 
     def generate_individual(self) -> "WarehouseIndividual":
         # RETODO
+        # new_individual = WarehouseIndividual(self, len(self.agent_search.pairs))
         pass
 
     def __str__(self):
