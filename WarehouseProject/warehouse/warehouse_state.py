@@ -26,35 +26,41 @@ class WarehouseState(State[Action]):
                     self.line_exit = i
                     self.column_exit = j
                   
+    
+
+
     #checks if a robot can go to a certain position
     def is_passageway(self, x, y) -> bool: 
-      point = point
-      if(point is not null and (point == constants.FORKLIFT or  point == constants.EMPTY)):
-        return true;  
-      return false
-
+      point = self.matrix[x][y]
+      if(point is not None and (point == constants.FORKLIFT or  point == constants.EMPTY)):
+        return True
+      return False
+      
+    def can_move_down(self) -> bool:
+      _is_passageway= lambda: self.is_passageway(self.line_forklift + 1, self.column_forklift)
+      if self.line_forklift + 1 < self.rows and _is_passageway() : 
+        return True 
+      return False
 
     def can_move_up(self) -> bool:
-        if line_forklift - 1 >= 0 and is_passageway(self.line_forklift - 1, self.column_forklift) : 
-          return true 
-        return false
+      _is_passageway= lambda: self.is_passageway(self.line_forklift - 1, self.column_forklift)
+      if self.line_forklift - 1 >= 0 and _is_passageway() : 
+        return True 
+      return False
 
+   
     
     def can_move_right(self) -> bool:
-        if self.column_forklift + 1 < self.columns and is_passageway(self.line_forklift , self.column_forklift + 1) : 
-          return true 
-        return false
-        
-
-    def can_move_down(self) -> bool:
-        if self.line_forklift + 1 < self.rows and is_passageway(self.line_forklift + 1, self.column_forklift) : 
-          return true 
-        return false
+      _is_passageway = lambda: self.is_passageway(self.line_forklift , self.column_forklift + 1) 
+      if self.column_forklift + 1 < self.columns and _is_passageway(): 
+        return True 
+      return False
 
     def can_move_left(self) -> bool:
-        if self.column_forklift - 1 >= 0 and is_passageway(self.line_forklift - 1, self.column_forklift) : 
-          return true 
-        return false
+      _is_passageway = lambda: self.is_passageway(self.line_forklift, self.column_forklift - 1)
+      if self.column_forklift - 1 >= 0 and _is_passageway(): 
+        return True 
+      return False
     #this tipically should be used with forklifts
     def move_object(self, x, y, x1, y1): 
       #this will need to change in case of colisions 
@@ -65,29 +71,28 @@ class WarehouseState(State[Action]):
         self.line_forklift = x1
         self.column_forklift = y1
 
+    def move_down(self) -> None:
+      if self.can_move_down():
+        axis = self.line_forklift + 1
+        self.move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
+
 
     def move_up(self) -> None:
-      if can_move_up():
+      if self.can_move_up():
         axis = self.line_forklift -1
-        move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
-        
+        self.move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
         
 
+   
     def move_right(self) -> None:
-      if can_move_right():
+      if self.can_move_right():
         axis = self.column_forklift + 1
-        move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
-
-    def move_down(self) -> None:
-      if can_move_down():
-        axis = self.line_forklift + 1
-        move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
-
+        self.move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
 
     def move_left(self) -> None:
-      if can_move_left(): 
+      if self.can_move_left(): 
         axis = self.column_forklift - 1
-        move_object(self.line_forklift,self.column_forklift, self.line_forklift , axis)
+        self.move_object(self.line_forklift,self.column_forklift, self.line_forklift , axis)
 
     def get_cell_color(self, row: int, column: int) -> Color:
         if row == self.line_exit and column == self.column_exit and (

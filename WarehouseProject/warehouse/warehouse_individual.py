@@ -7,11 +7,13 @@ class WarehouseIndividual(IntVectorIndividual):
         # RETODO 
 
     def compute_fitness(self) -> float:
-        # RETODO
+        # TODO implement a fitness function for warehouse individual
         return 0
-
+    # Calcula os caminhos completos percorridos pelos forklifts. Devolve uma lista de listas de células(as células percorridas por cada forklift);
+    # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)
     def obtain_all_path(self):
-        # RETODO
+        # TODO implement a method to obtain all paths from the genome
+
         pass
 
     def __str__(self):

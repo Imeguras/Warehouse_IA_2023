@@ -353,7 +353,7 @@ class Window(tk.Tk):
             Recombination2(float(self.entry_recombination_prob.get())) if recombination_methods_index == 1 else \
                 Recombination3(float(self.entry_recombination_prob.get()))
 
-        mutation_methods_index = self.combo_recombination_methods.current()
+        mutation_methods_index = self.combo_mutation_methods.current()
         mutation_method = MutationInsert(
             float(self.entry_mutation_prob.get())) if mutation_methods_index == 0 else \
             Mutation2(float(self.entry_mutation_prob.get())) if mutation_methods_index == 1 else \
@@ -654,16 +654,16 @@ class SearchSolver(threading.Thread):
         self.agent.stop()
 
     def run(self):
-        # TODO calculate pairs distances
+       
         self.agent.search_method.stopped=True
         
         for i in self.agent.pairs:
           teleportForklifts=copy.deepcopy(self.agent.initial_environment)
           teleportForklifts.move_object(teleportForklifts.line_forklift, teleportForklifts.column_forklift,i.cell1.line, i.cell1.column) 
-          test = WarehouseProblemSearch(teleportForklifts,i.cell2)
-          test.heuristic = HeuristicWarehouse()
-          test.heuristic.problem = test
-          i.value =  test.heuristic.compute(teleportForklifts)
+          problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
+          solution_a = self.agent.solve_problem(problem)
+          
+          i.value = solution_a.cost
           
         self.gui.text_problem.insert(tk.END, str(self.agent))
           

@@ -1,6 +1,6 @@
 
 import copy
-
+import math
 from agentsearch.problem import Problem
 from warehouse.actions import *
 from warehouse.cell import Cell
@@ -26,7 +26,13 @@ class WarehouseProblemSearch(Problem[WarehouseState]):
         action.execute(successor)
         return successor
 
+  
+
     def is_goal(self, state: WarehouseState) -> bool:
-        # RETODO
-        pass
+      # if the agent is adjacent to the goal return true 
+      # check euclidean distance and see if its equal or smaller than 1
+      euclidean_distance = math.sqrt(pow(state.line_forklift - self.goal_position.line,2) + pow(state.column_forklift - self.goal_position.column,2) )
+      if euclidean_distance <=1:
+        return True
+      return False
 
