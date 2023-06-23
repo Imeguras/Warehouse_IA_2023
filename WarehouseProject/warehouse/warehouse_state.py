@@ -14,10 +14,13 @@ class WarehouseState(State[Action]):
         
         self.rows = rows
         self.columns = columns
+        self.products = []
         self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
-
+        iteration_product = 1
+        # TODO: Averiguate if state needs forklift refactoring to get cached forklifts instead of single var for only one this also aplies to exits
         for i in range(self.rows):
             for j in range(self.columns):
+              
                 self.matrix[i][j] = matrix[i][j]
                 if self.matrix[i][j] == constants.FORKLIFT:
                     self.line_forklift = i
@@ -25,7 +28,9 @@ class WarehouseState(State[Action]):
                 if self.matrix[i][j] == constants.EXIT:
                     self.line_exit = i
                     self.column_exit = j
-                  
+                if self.matrix[i][j] == constants.PRODUCT:
+                  self.products[iteration_product] = Cell(i, j)
+                  iteration_product += 1
     
 
 
