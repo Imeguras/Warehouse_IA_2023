@@ -4,10 +4,12 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def __init__(self, problem: "WarehouseProblem", num_genes: int):
         super().__init__(problem, num_genes)
-        # RETODO 
+        # self.cost = 0
+        # RETODO
 
     def compute_fitness(self) -> float:
         # TODO implement a fitness function for warehouse individual
+
         return 0
     # Calcula os caminhos completos percorridos pelos forklifts. Devolve uma lista de listas de células(as células percorridas por cada forklift);
     # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)

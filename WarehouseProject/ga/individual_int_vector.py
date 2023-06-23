@@ -10,7 +10,7 @@ class IntVectorIndividual(Individual):
 
     def __init__(self, problem: Problem, num_genes: int):
         super().__init__(problem, num_genes)
-        # self.genome = np.full(num_genes, False, dtype=bool)
+        # self.genome = np.full(num_genes, False, dtype=int)
         # RETODO
 
     def swap_genes(self, other, index: int):
