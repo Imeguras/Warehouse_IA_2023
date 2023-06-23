@@ -1,6 +1,6 @@
 from ga.individual_int_vector import IntVectorIndividual
 import ga.genetic_algorithm
-import pair
+from warehouse.pair import Pair
 class WarehouseIndividual(IntVectorIndividual):
 
     def __init__(self, problem: "WarehouseProblem", num_genes: int):
@@ -15,7 +15,7 @@ class WarehouseIndividual(IntVectorIndividual):
       palatin_matrix = self.obtain_all_path()
       for i in range(len(palatin_matrix)):
         self.fitness += len(palatin_matrix[i])
-        
+
     
       return self.fitness
 

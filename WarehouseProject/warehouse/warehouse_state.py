@@ -5,7 +5,7 @@ from numpy import ndarray
 import constants
 from agentsearch.state import State
 from agentsearch.action import Action
-
+from warehouse.cell import Cell
 
 class WarehouseState(State[Action]):
 
