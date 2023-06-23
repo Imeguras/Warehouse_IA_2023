@@ -13,7 +13,7 @@ class WarehouseIndividual(IntVectorIndividual):
     # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)
     def obtain_all_path(self):
         # TODO implement a method to obtain all paths from the genome
-
+        
         pass
 
     def __str__(self):

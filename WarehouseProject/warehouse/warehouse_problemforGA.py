@@ -16,9 +16,11 @@ class WarehouseProblemGA(Problem):
           s = WarehouseProblemSearch(agent_search.initial_environment, i)
 
     def generate_individual(self) -> "WarehouseIndividual":
-        # TODO implement a method to generate a random individual
-        pass
-
+        # cada genoma e a permutação de todos os forklifts com todos os produtos
+        new_individual = WarehouseIndividual(self, len(self.products))
+        # initialize? 
+        return new_individual
+        
     def __str__(self):
         string = "# of forklifts: "
         string += f'{len(self.forklifts)}'
