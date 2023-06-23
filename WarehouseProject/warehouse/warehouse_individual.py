@@ -10,9 +10,12 @@ class WarehouseIndividual(IntVectorIndividual):
         # RETODO
 
     def compute_fitness(self) -> float:
-      self.fitness = 0
-      for i in range(len(self.genome)):
-          self.fitness = self.fitness + self.problem.agent_search.pairs[i].cost 
+      # Por agora self.fitness = obtain_all_path total cost
+      self.fitness = 0.0
+      palatin_matrix = self.obtain_all_path()
+      for i in range(len(palatin_matrix)):
+        self.fitness += len(palatin_matrix[i])
+        
     
       return self.fitness
 
