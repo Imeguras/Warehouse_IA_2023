@@ -4,6 +4,7 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def __init__(self, problem: "WarehouseProblem", num_genes: int):
         super().__init__(problem, num_genes)
+        self.genome = self.generate_genome(num_genes)
         # self.cost = 0
         # RETODO
 
