@@ -275,6 +275,7 @@ class Window(tk.Tk):
     def problem_button_clicked(self):
         filename = fd.askopenfilename(initialdir='.')
         f = open('last_problem.txt','w')
+        #TODO : cancelling the file dialog should not change the last_problem.txt file
         f.write(filename)
         f.close
 
@@ -672,8 +673,7 @@ class SearchSolver(threading.Thread):
           
           
 
-        #self.gui.problem_ga = WarehouseProblemGA(self.agent)
-        
+        self.gui.problem_ga = WarehouseProblemGA(self.agent)
 
         #self.agent.search_method.search(self.gui.problem_ga)
 
