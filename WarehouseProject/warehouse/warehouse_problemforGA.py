@@ -2,6 +2,7 @@ from ga.problem import Problem
 from warehouse.warehouse_agent_search import WarehouseAgentSearch
 from warehouse.warehouse_individual import WarehouseIndividual
 from warehouse.warehouse_problemforSearch import WarehouseProblemSearch
+import ga.genetic_algorithm
 
 class WarehouseProblemGA(Problem):
     def __init__(self, agent_search: WarehouseAgentSearch):
@@ -17,9 +18,20 @@ class WarehouseProblemGA(Problem):
     def generate_individual(self) -> "WarehouseIndividual":
         # cada genoma e a permutação de todos os forklifts com todos os produtos
         new_individual = WarehouseIndividual(self, len(self.products))
-        # initialize? 
+        new_individual.genome = self.generate_genome(self, new_individual)
+        # print(new_individual.genome)
         return new_individual
-        
+
+    def generate_genome(self, individual: WarehouseIndividual):
+        tmpProducts = self.products.copy()
+        nProducts = len(tmpProducts)
+        for i in range(nProducts):
+            randomIndex = ga.genetic_algorithm.rand.randrange(0,nProducts)
+            individual.genome.append(tmpProducts[randomIndex])
+            tmpProducts.pop(randomIndex)
+            nProducts -= 1
+        return individual.genome
+
     def __str__(self):
         string = "# of forklifts: "
         string += f'{len(self.forklifts)}'
