@@ -1,5 +1,5 @@
 from ga.individual_int_vector import IntVectorIndividual
-
+import ga.genetic_algorithm
 class WarehouseIndividual(IntVectorIndividual):
 
     def __init__(self, problem: "WarehouseProblem", num_genes: int):
@@ -11,6 +11,16 @@ class WarehouseIndividual(IntVectorIndividual):
         # TODO implement a fitness function for warehouse individual
 
         return 0
+
+    def generate_genome(self, num_genes: int):
+        tmpProducts = list(range(0,num_genes))
+        for i in range(num_genes):
+            randomIndex = ga.genetic_algorithm.rand.randrange(0,num_genes)
+            self.genome.append(tmpProducts[randomIndex])
+            tmpProducts.pop(randomIndex)
+            num_genes -= 1
+        return self.genome
+
     # Calcula os caminhos completos percorridos pelos forklifts. Devolve uma lista de listas de células(as células percorridas por cada forklift);
     # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)
     def obtain_all_path(self):
