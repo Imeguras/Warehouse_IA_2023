@@ -274,10 +274,10 @@ class Window(tk.Tk):
 
     def problem_button_clicked(self):
         filename = fd.askopenfilename(initialdir='.')
-        f = open('last_problem.txt','w')
-        #TODO : cancelling the file dialog should not change the last_problem.txt file
-        f.write(filename)
-        f.close
+        if filename != "":
+            f = open('last_problem.txt','w')
+            f.write(filename)
+            f.close
 
         if filename:
             matrix, num_rows, num_columns = read_state_from_txt_file(filename)
