@@ -88,7 +88,7 @@ class WarehouseIndividual(IntVectorIndividual):
         for j in range(len(actionListForklift[i])):
           actionListForklift[i][j].execute(state)
           
-          cellListofLists[i].append(Cell(state.forklifts[i].line, state.forklifts[i].column))
+          cellListofLists[i].append(Cell(state.cell_forklift.line, state.cell_forklift.column))
       return (cellListofLists, len(max(actionListForklift, key=len)), actionListForklift )  
         
 
