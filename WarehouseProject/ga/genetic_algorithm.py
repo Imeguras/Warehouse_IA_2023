@@ -8,7 +8,7 @@ from ga.ga_event import GAEvent
 rand = Random()
 
 class GeneticAlgorithm:
-
+    rand = rand
     def __init__(self,
                  seed: int,
                  population_size: int,
@@ -16,7 +16,8 @@ class GeneticAlgorithm:
                  selection_method: SelectionMethod,
                  recombination: "Recombination",
                  mutation: "Mutation"):
-        self.rand= Random(seed)
+        rand = Random(seed)
+        self.rand= rand
         self.population_size = population_size
         self.max_generations = max_generations
         self.selection_method = selection_method

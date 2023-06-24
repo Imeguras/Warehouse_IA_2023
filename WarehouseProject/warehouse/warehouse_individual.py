@@ -17,10 +17,11 @@ class WarehouseIndividual(IntVectorIndividual):
       # Por agora self.fitness = obtain_all_path total cost
       self.fitness = 0.0
       palatin_matrix = self.obtain_all_path()
+      print(palatin_matrix)
       for i in range(len(palatin_matrix)):
         self.fitness += len(palatin_matrix[i])
 
-    
+
       return self.fitness
 
     def generate_genome(self, num_genes: int):
