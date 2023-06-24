@@ -21,7 +21,7 @@ class WarehouseAgentSearch(Agent):
         self.products = []
         self.exit = None
         self.pairs = []
-        self.pairsDictionary = defaultdict(list)
+        self.pairsDictionary = defaultdict(Pair)
         for i in range(environment.rows):
             for j in range(environment.columns):
                 if environment.matrix[i][j] == constants.FORKLIFT:
@@ -39,7 +39,8 @@ class WarehouseAgentSearch(Agent):
               # gets the index of future appended pair
               index_pair = len(self.pairs)
               self.pairs.append(pair)
-              self.pairsDictionary[pair.hash] = index_pair
+        
+              self.pairsDictionary[pair.hash()] = pair
                 
 
         for i in range(len(self.products) - 1):
@@ -47,19 +48,19 @@ class WarehouseAgentSearch(Agent):
               pair = Pair(self.products[i], self.products[j])
               index_pair = len(self.pairs)
               self.pairs.append(pair)
-              self.pairsDictionary[pair.hash] = index_pair
+              self.pairsDictionary[pair.hash()] = pair
 
         for p in self.products:
           pair  = Pair(p, self.exit)
           index_pair = len(self.pairs)
           self.pairs.append(pair)
-          self.pairsDictionary[pair.hash] = index_pair
+          self.pairsDictionary[pair.hash()] = pair
 
         for a in self.forklifts:
           pair = Pair(a, self.exit)
           index_pair = len(self.pairs)
           self.pairs.append(pair )
-          self.pairsDictionary[pair.hash] = index_pair
+          self.pairsDictionary[pair.hash()] = pair
 
     def __str__(self) -> str:
         str = "Pairs:\n"

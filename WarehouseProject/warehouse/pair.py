@@ -7,7 +7,7 @@ class Pair:
         # path resolution is a list of pairs, acho que nao precisa de ser numpy...
         self.path_resolution = []
 
-    def hash(self):
+    def hash(self)->str:
         return str(self.cell1.line) + "_" + str(self.cell1.column) + "_" + str(
             self.cell2.line) + "_" + str(self.cell2.column)
 

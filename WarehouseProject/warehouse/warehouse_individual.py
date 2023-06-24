@@ -52,18 +52,24 @@ class WarehouseIndividual(IntVectorIndividual):
         
         # get the last cell and the current 
         
-        current_cell = self.problem.agent_search.initial_state.products[self.genome[i]]
+        current_cell = self.problem.agent_search.initial_environment.products[self.genome[i]]
         if previous_product_index < 0:
           previous_cell = self.problem.agent_search.forklifts[currentForklift]
         else: 
-          previous_cell = self.problem.agent_search.initial_state.products[self.genome[previous_product_index]]
+          previous_cell = self.problem.agent_search.initial_environment.products[self.genome[previous_product_index]]
 
         # create a temporary pair for formalities
         tmpPair = Pair(previous_cell, current_cell)
         # hash the pair
         hash_pair = tmpPair.hash()
         #find the pair through the hash in agent_search.pairsDictionary
-        pair = self.problem.agent_search.pairsDictionary[hash_pair]
+        print("hash é: "+hash_pair)
+        print(self.problem.agent_search.pairsDictionary)
+        pair = self.problem.agent_search.pairsDictionary.get(hash_pair)
+        if pair is None:
+          print("Pair not found")
+          return None
+
         # get path of pair 
         path = pair.path_resolution
         # Concatenate the path to its corresponding sublist in listPathsbyForkLifts
