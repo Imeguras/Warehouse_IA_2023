@@ -1,7 +1,7 @@
 import numpy as np
 from PIL.ImageEnhance import Color
 from numpy import ndarray
-
+from collections import defaultdict
 import constants
 from agentsearch.state import State
 from agentsearch.action import Action
@@ -14,7 +14,7 @@ class WarehouseState(State[Action]):
         
         self.rows = rows
         self.columns = columns
-        self.products = []
+        self.products = defaultdict(Cell)
         self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
         iteration_product = 1
         # TODO: Averiguate if state needs forklift refactoring to get cached forklifts instead of single var for only one this also aplies to exits
