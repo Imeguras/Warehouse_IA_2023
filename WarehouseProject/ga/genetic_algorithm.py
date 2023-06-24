@@ -1,15 +1,14 @@
-
 from random import Random
 import copy
 from ga.population import Population
 from ga.selection_methods.selection_method import SelectionMethod
 from ga.ga_event import GAEvent
 
+# static variable for random
+rand = Random()
 
 class GeneticAlgorithm:
-
-    rand = None
-
+    rand = rand
     def __init__(self,
                  seed: int,
                  population_size: int,
@@ -17,7 +16,8 @@ class GeneticAlgorithm:
                  selection_method: SelectionMethod,
                  recombination: "Recombination",
                  mutation: "Mutation"):
-        GeneticAlgorithm.rand = Random(seed)
+        rand = Random(seed)
+        self.rand= rand
         self.population_size = population_size
         self.max_generations = max_generations
         self.selection_method = selection_method
@@ -29,6 +29,7 @@ class GeneticAlgorithm:
         self.best_in_run = None
         self.problem = None
         self.listeners = []
+ 
 
     def stop(self) -> None:
         self.stopped = True

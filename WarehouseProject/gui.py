@@ -275,6 +275,7 @@ class Window(tk.Tk):
     def problem_button_clicked(self):
         filename = fd.askopenfilename(initialdir='.')
         f = open('last_problem.txt','w')
+        #TODO : cancelling the file dialog should not change the last_problem.txt file
         f.write(filename)
         f.close
 
@@ -338,7 +339,8 @@ class Window(tk.Tk):
         self.solver.start()
 
     def runGA_button_clicked(self):
-
+        self.problem_ga = WarehouseProblemGA(self.agent_search)
+        
         if self.problem_ga is None:
             messagebox.showwarning("Warning", "You should define a problem first (Problem button)")
             return
@@ -368,12 +370,12 @@ class Window(tk.Tk):
             mutation_method
         )
 
+        
         self.queue.queue.clear()
         self.generations = 0
         self.generation_values = []
         self.average_values = []
         self.best_values = []
-
         self.genetic_algorithm.problem = self.problem_ga
         self.genetic_algorithm.add_tkinter_listener(self)
         self.genetic_algorithm.daemon = True
@@ -664,19 +666,9 @@ class SearchSolver(threading.Thread):
           solution_a = self.agent.solve_problem(problem)
           i.path_resolution=solution_a.actions
           i.value = solution_a.cost
-          
-        self.gui.text_problem.insert(tk.END, str(self.agent))
-          
-          
-          
-          
-          
 
-        #self.gui.problem_ga = WarehouseProblemGA(self.agent)
         
-
-        #self.agent.search_method.search(self.gui.problem_ga)
-
+        self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
                                 simulation=tk.DISABLED, stop_simulation=tk.DISABLED)

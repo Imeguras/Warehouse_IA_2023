@@ -8,7 +8,7 @@ from agentsearch.state import State
 from warehouse.cell import Cell
 from warehouse.heuristic_warehouse import HeuristicWarehouse
 from warehouse.pair import Pair
-
+from collections import defaultdict
 
 class WarehouseAgentSearch(Agent):
     S = TypeVar('S', bound=State)
@@ -21,6 +21,7 @@ class WarehouseAgentSearch(Agent):
         self.products = []
         self.exit = None
         self.pairs = []
+        self.pairsDictionary = defaultdict(Pair)
         for i in range(environment.rows):
             for j in range(environment.columns):
                 if environment.matrix[i][j] == constants.FORKLIFT:
@@ -30,20 +31,40 @@ class WarehouseAgentSearch(Agent):
                 elif environment.matrix[i][j] == constants.PRODUCT:
                     self.products.append(Cell(i, j))
 
-
+        # TODO: clean this sh*t
         for a in self.forklifts:
             for p in self.products:
-                self.pairs.append(Pair(a, p))
+              pair = Pair(a, p)
+              
+              # gets the index of future appended pair
+              index_pair = len(self.pairs)
+              self.pairs.append(pair)
+        
+              self.pairsDictionary[pair.hash()] = pair
+                
 
         for i in range(len(self.products) - 1):
             for j in range(i + 1, len(self.products)):
-                self.pairs.append(Pair(self.products[i], self.products[j]))
-
+              pair = Pair(self.products[i], self.products[j])
+              reversePair = Pair(self.products[j], self.products[i])
+              index_pair = len(self.pairs)
+              self.pairs.append(pair)
+              self.pairs.append(reversePair)
+              self.pairsDictionary[pair.hash()] = pair
+              self.pairsDictionary[reversePair.hash()] = reversePair
+              
+              
         for p in self.products:
-            self.pairs.append(Pair(p, self.exit))
+          pair  = Pair(p, self.exit)
+          index_pair = len(self.pairs)
+          self.pairs.append(pair)
+          self.pairsDictionary[pair.hash()] = pair
 
         for a in self.forklifts:
-            self.pairs.append(Pair(a, self.exit))
+          pair = Pair(a, self.exit)
+          index_pair = len(self.pairs)
+          self.pairs.append(pair )
+          self.pairsDictionary[pair.hash()] = pair
 
     def __str__(self) -> str:
         str = "Pairs:\n"
