@@ -18,15 +18,18 @@ class WarehouseState(State[Action]):
         #this one is just to make the products array start at index 1
         self.products.append(Cell(0,0))
         self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
-        
+        self.forklifts = []
+
         # TODO: Averiguate if state needs forklift refactoring to get cached forklifts instead of single var for only one this also aplies to exits
         for i in range(self.rows):
             for j in range(self.columns):
               
                 self.matrix[i][j] = matrix[i][j]
                 if self.matrix[i][j] == constants.FORKLIFT:
+                    self.forklifts.append(Cell(i, j))
                     self.line_forklift = i
                     self.column_forklift = j
+                    
                 if self.matrix[i][j] == constants.EXIT:
                     self.line_exit = i
                     self.column_exit = j

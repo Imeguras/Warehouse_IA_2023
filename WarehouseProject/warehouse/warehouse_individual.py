@@ -1,7 +1,9 @@
 from ga.individual_int_vector import IntVectorIndividual
 import ga.genetic_algorithm
 from warehouse.pair import Pair
+from warehouse.cell import Cell
 import random
+import copy
 class WarehouseIndividual(IntVectorIndividual):
 
     def __init__(self, problem: "WarehouseProblem", num_genes: int):
@@ -17,7 +19,7 @@ class WarehouseIndividual(IntVectorIndividual):
       # Por agora self.fitness = obtain_all_path total cost
       #TODO tomar em conta colisões e o custo até ao ponto de retorno
       self.fitness = 0.0
-      palatin_matrix = self.obtain_all_path()
+      (_irrelevant2, _irrelevant, palatin_matrix) = self.obtain_all_path()
       
       #print(palatin_matrix)
       for i in range(len(palatin_matrix)):
@@ -41,13 +43,13 @@ class WarehouseIndividual(IntVectorIndividual):
     # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)
     
     #Adendum por agora so vai dar uma lista de listas com todas as actions para chegar do inicio até ao ponto em que ele tera de voltar ao fim
-    # TODO: apparently devolver o caminho maximo e um must, e nem sei se isto das actions e valido, se calhar somos mesmo obrigado a manter as celulas
     def obtain_all_path(self):
-      listPathsbyForkLifts = []
+      actionListForklift = []
       num_forklifts = len(self.problem.agent_search.forklifts)
+      cellListofLists = []
       for f in range(num_forklifts):
-        listPathsbyForkLifts.append([])
-      
+        actionListForklift.append([])
+        cellListofLists.append([])
 
 
       for i in range(len(self.genome)):
@@ -76,9 +78,18 @@ class WarehouseIndividual(IntVectorIndividual):
 
         # get path of pair 
         path = pair.path_resolution
-        # Concatenate the path to its corresponding sublist in listPathsbyForkLifts
-        listPathsbyForkLifts[currentForklift] += path
-      return listPathsbyForkLifts   
+        # Concatenate the path to its corresponding sublist in actionListForklift
+        actionListForklift[currentForklift] += path
+        #cellListofList
+      
+      for i in range(len(actionListForklift)):
+        state = copy.deepcopy(self.problem.agent_search.initial_environment)
+
+        for j in range(len(actionListForklift[i])):
+          actionListForklift[i][j].execute(state)
+          
+          cellListofLists[i].append(Cell(state.forklifts[i].line, state.forklifts[i].column))
+      return (cellListofLists, len(max(actionListForklift, key=len)), actionListForklift )  
         
 
 
