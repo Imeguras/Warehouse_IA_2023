@@ -15,9 +15,11 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def compute_fitness(self) -> float:
       # Por agora self.fitness = obtain_all_path total cost
+      #TODO tomar em conta colisões e o custo até ao ponto de retorno
       self.fitness = 0.0
       palatin_matrix = self.obtain_all_path()
-      print(palatin_matrix)
+      
+      #print(palatin_matrix)
       for i in range(len(palatin_matrix)):
         self.fitness += len(palatin_matrix[i])
 
@@ -32,7 +34,7 @@ class WarehouseIndividual(IntVectorIndividual):
             self.genome.append(tmpProducts[randomIndex])
             tmpProducts.pop(randomIndex)
             num_genes -= 1
-        print ("Genoma Criado"+self.genome.__str__())
+        #print ("Genoma Criado"+self.genome.__str__())
         return self.genome
 
     # Calcula os caminhos completos percorridos pelos forklifts. Devolve uma lista de listas de células(as células percorridas por cada forklift);
@@ -65,7 +67,7 @@ class WarehouseIndividual(IntVectorIndividual):
         # hash the pair
         hash_pair = tmpPair.hash()
         #find the pair through the hash in agent_search.pairsDictionary
-        print("hash é: "+hash_pair)
+        #print("hash é: "+hash_pair)
         
         pair = self.problem.agent_search.pairsDictionary.get(hash_pair)
         if pair is None:

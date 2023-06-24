@@ -273,13 +273,14 @@ class Window(tk.Tk):
         # End of constructor -----------------------------------
 
     def problem_button_clicked(self):
+        filename = ""
         filename = fd.askopenfilename(initialdir='.')
-        if filename != "":
+        
+        if filename:
             f = open('last_problem.txt','w')
             f.write(filename)
             f.close
 
-        if filename:
             matrix, num_rows, num_columns = read_state_from_txt_file(filename)
             self.initial_state = WarehouseState(matrix, num_rows, num_columns)
             self.agent_search = WarehouseAgentSearch(WarehouseState(matrix, num_rows, num_columns))
