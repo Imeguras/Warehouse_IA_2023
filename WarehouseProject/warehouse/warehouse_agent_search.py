@@ -46,10 +46,14 @@ class WarehouseAgentSearch(Agent):
         for i in range(len(self.products) - 1):
             for j in range(i + 1, len(self.products)):
               pair = Pair(self.products[i], self.products[j])
+              reversePair = Pair(self.products[j], self.products[i])
               index_pair = len(self.pairs)
               self.pairs.append(pair)
+              self.pairs.append(reversePair)
               self.pairsDictionary[pair.hash()] = pair
-
+              self.pairsDictionary[reversePair.hash()] = reversePair
+              
+              
         for p in self.products:
           pair  = Pair(p, self.exit)
           index_pair = len(self.pairs)
