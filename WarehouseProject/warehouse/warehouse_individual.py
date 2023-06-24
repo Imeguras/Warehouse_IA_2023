@@ -39,7 +39,7 @@ class WarehouseIndividual(IntVectorIndividual):
     # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)
     
     #Adendum por agora so vai dar uma lista de listas com todas as actions para chegar do inicio até ao ponto em que ele tera de voltar ao fim
-
+    # TODO: apparently devolver o caminho maximo e um must, e nem sei se isto das actions e valido, se calhar somos mesmo obrigado a manter as celulas
     def obtain_all_path(self):
       listPathsbyForkLifts = []
       num_forklifts = len(self.problem.agent_search.forklifts)
