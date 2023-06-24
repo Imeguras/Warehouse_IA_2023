@@ -1,11 +1,15 @@
 from ga.individual_int_vector import IntVectorIndividual
 import ga.genetic_algorithm
 from warehouse.pair import Pair
+import random
 class WarehouseIndividual(IntVectorIndividual):
 
     def __init__(self, problem: "WarehouseProblem", num_genes: int):
         super().__init__(problem, num_genes)
-        self.genome = self.generate_genome(num_genes)
+        self.problem = problem
+        self.genome = []
+        #self.genome = self.generate_genome(num_genes)
+        
         # self.cost = 0
         # RETODO
 
@@ -21,6 +25,7 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def generate_genome(self, num_genes: int):
         tmpProducts = list(range(0,num_genes))
+      
         for i in range(num_genes):
             randomIndex = ga.genetic_algorithm.rand.randrange(0,num_genes)
             self.genome.append(tmpProducts[randomIndex])
