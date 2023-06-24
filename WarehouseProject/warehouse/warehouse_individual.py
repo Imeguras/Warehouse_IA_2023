@@ -24,13 +24,14 @@ class WarehouseIndividual(IntVectorIndividual):
       return self.fitness
 
     def generate_genome(self, num_genes: int):
-        tmpProducts = list(range(0,num_genes))
+        tmpProducts = list(range(1,num_genes+1))
       
-        for i in range(num_genes):
+        for i in range(0,num_genes):
             randomIndex = ga.genetic_algorithm.rand.randrange(0,num_genes)
             self.genome.append(tmpProducts[randomIndex])
             tmpProducts.pop(randomIndex)
             num_genes -= 1
+        print ("Genoma Criado"+self.genome.__str__())
         return self.genome
 
     # Calcula os caminhos completos percorridos pelos forklifts. Devolve uma lista de listas de células(as células percorridas por cada forklift);
@@ -64,7 +65,7 @@ class WarehouseIndividual(IntVectorIndividual):
         hash_pair = tmpPair.hash()
         #find the pair through the hash in agent_search.pairsDictionary
         print("hash é: "+hash_pair)
-        print(self.problem.agent_search.pairsDictionary)
+        
         pair = self.problem.agent_search.pairsDictionary.get(hash_pair)
         if pair is None:
           print("Pair not found")
