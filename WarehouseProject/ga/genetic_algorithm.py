@@ -16,8 +16,7 @@ class GeneticAlgorithm:
                  selection_method: SelectionMethod,
                  recombination: "Recombination",
                  mutation: "Mutation"):
-        rand = Random(seed)
-        self.rand= rand
+        self.rand = Random(seed)
         self.population_size = population_size
         self.max_generations = max_generations
         self.selection_method = selection_method

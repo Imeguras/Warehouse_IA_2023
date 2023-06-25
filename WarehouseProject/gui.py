@@ -119,7 +119,7 @@ class Window(tk.Tk):
                                                     anchor="e", width=25)
         self.label_recombination_methods.grid(row=5, column=0)
 
-        recombination_methods = ['PMX', 'Recombination2', 'Recombination3']
+        recombination_methods = ['PMX', 'OX1', 'Cycle']
 
         self.combo_recombination_methods = ttk.Combobox(master=self.panel_parameters, state="readonly",
                                                         values=recombination_methods, width=14)
