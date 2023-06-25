@@ -45,15 +45,15 @@ class WarehouseAgentSearch(Agent):
       def pair_product_manager(target_list, cellOrigin, cellDestiny): 
         pair_raw_manager(target_list, cellOrigin, cellDestiny)
         pair_raw_manager(target_list, cellDestiny, cellOrigin)
-      
+      #from forklift to product
       for a in self.forklifts:
         for p in self.products:
           pair_raw_manager(self.pairs, a, p)
-      
+      #product to product
       for i in range(len(self.products) - 1):
         for j in range(i + 1, len(self.products)): 
           pair_product_manager(self.pairs, self.products[i], self.products[j])
-
+      
       for p in self.products:
         pair_raw_manager(self.pairs, p, self.exit)
 
