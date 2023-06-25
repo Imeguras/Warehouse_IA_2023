@@ -73,7 +73,7 @@ class WarehouseIndividual(IntVectorIndividual):
         
         pair = self.problem.agent_search.pairsDictionary.get(hash_pair)
         if pair is None:
-          print("Pair not found")
+          print("Pair not found"+ hash_pair)
           return None
 
         # get path of pair 
@@ -84,7 +84,7 @@ class WarehouseIndividual(IntVectorIndividual):
       
       for i in range(len(actionListForklift)):
         state = copy.deepcopy(self.problem.agent_search.initial_environment)
-
+        state.cell_forklift = copy.deepcopy(self.problem.agent_search.forklifts[i])
         for j in range(len(actionListForklift[i])):
           actionListForklift[i][j].execute(state)
           
