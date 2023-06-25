@@ -32,9 +32,5 @@ class Recombination2(Recombination):
         ind2.genome = child1
         return ind1.genome, ind2.genome
 
-
-
-        pass
-
     def __str__(self):
         return "Recombination 2 (" + f'{self.probability}' + ")"
