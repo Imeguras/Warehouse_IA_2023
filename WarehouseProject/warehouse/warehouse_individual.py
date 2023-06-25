@@ -38,7 +38,9 @@ class WarehouseIndividual(IntVectorIndividual):
             num_genes -= 1
         #print ("Genoma Criado"+self.genome.__str__())
         return self.genome
-
+    def get_real_pair_references(self, pair: Pair)-> Pair:
+      hash_pair = pair.hash()
+      return self.problem.agent_search.pairsDictionary.get(hash_pair)
     # Calcula os caminhos completos percorridos pelos forklifts. Devolve uma lista de listas de células(as células percorridas por cada forklift);
     # e o numero máximo de passos necessário para percorrer todos os caminhos(i.e, o numero de células do caminho mais longo percorrido por um forklift)
     
@@ -65,13 +67,8 @@ class WarehouseIndividual(IntVectorIndividual):
           previous_cell = self.problem.agent_search.initial_environment.products[self.genome[previous_product_index]]
 
         # create a temporary pair for formalities
-        tmpPair = Pair(previous_cell, current_cell)
-        # hash the pair
-        hash_pair = tmpPair.hash()
-        #find the pair through the hash in agent_search.pairsDictionary
-        #print("hash é: "+hash_pair)
+        pair=self.get_real_pair_references(Pair(previous_cell, current_cell))
         
-        pair = self.problem.agent_search.pairsDictionary.get(hash_pair)
         if pair is None:
           print("Pair not found"+ hash_pair)
           return None
@@ -82,7 +79,27 @@ class WarehouseIndividual(IntVectorIndividual):
         actionListForklift[currentForklift] += path
         #cellListofList
       
+      
       for i in range(len(actionListForklift)):
+          # add a last pair resolution to the actionListForklift so that the forklift returns to the exit
+        if (len(actionListForklift[i]) == 0):
+          #send him straight to the exit
+          exit = self.get_real_pair_references(Pair(self.problem.agent_search.forklifts[i], self.problem.agent_search.exit))
+        else:
+          #here we are just adding the path from the last product to the exit
+
+          # the last index of the first forklift in the genome is [- num of forklift]
+          index = num_forklifts - i 
+          product_index = self.genome[-index]
+          #fetch the cell of the last product 
+          last_ProductCell=self.problem.agent_search.initial_environment.products[product_index]
+          exit = self.get_real_pair_references(Pair(last_ProductCell, self.problem.agent_search.exit))
+          
+        #lets add exit then 
+        forklift_directExitPath = exit.path_resolution
+        actionListForklift[i] += forklift_directExitPath
+
+
         state = copy.deepcopy(self.problem.agent_search.initial_environment)
         state.cell_forklift = copy.deepcopy(self.problem.agent_search.forklifts[i])
         for j in range(len(actionListForklift[i])):
@@ -110,3 +127,6 @@ class WarehouseIndividual(IntVectorIndividual):
         new_instance.fitness = self.fitness
         # RETODO
         return new_instance
+
+    
+        
