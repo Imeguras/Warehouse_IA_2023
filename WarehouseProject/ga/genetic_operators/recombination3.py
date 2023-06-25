@@ -41,7 +41,9 @@ class Recombination3(Recombination):
             if child2[i] == -1:
                 child2[i] = ind1.genome[i]
 
-        return child1, child2
+
+        ind1.genome = child2
+        ind2.genome = child1
 
     def __str__(self):
         return "Recombination 3 (" + f'{self.probability}' + ")"
