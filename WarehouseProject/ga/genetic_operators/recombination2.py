@@ -30,7 +30,6 @@ class Recombination2(Recombination):
 
         ind1.genome = child2
         ind2.genome = child1
-        return ind1.genome, ind2.genome
 
     def __str__(self):
         return "Recombination 2 (" + f'{self.probability}' + ")"
