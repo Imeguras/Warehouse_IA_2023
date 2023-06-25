@@ -1,5 +1,5 @@
 from ga.individual_int_vector import IntVectorIndividual
-import ga.genetic_algorithm
+from ga.genetic_algorithm import GeneticAlgorithm
 from warehouse.pair import Pair
 from warehouse.cell import Cell
 import random
@@ -32,7 +32,7 @@ class WarehouseIndividual(IntVectorIndividual):
         tmpProducts = list(range(1,num_genes+1))
       
         for i in range(0,num_genes):
-            randomIndex = ga.genetic_algorithm.rand.randrange(0,num_genes)
+            randomIndex = GeneticAlgorithm.rand.randrange(0,num_genes)
             self.genome.append(tmpProducts[randomIndex])
             tmpProducts.pop(randomIndex)
             num_genes -= 1
