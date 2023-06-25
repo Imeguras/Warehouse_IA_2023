@@ -19,14 +19,10 @@ class MutationInsert(Mutation):
         if cut1 > cut2:
             cut1, cut2 = cut2, cut1
 
-        mid = int(cut1 + ((cut2 + 1) - cut1) / 2)
-        endCount = cut2
-
-        for i in range(cut1, mid):
-            aux = ind.genome[i]
-            ind.genome[i] = ind.genome[endCount]
-            ind.genome[endCount] = aux
-            endCount -= 1
+        aux = ind.genome[cut2]
+        for i in range(cut2-1, cut1, -1):
+            ind.genome[i+1] = ind.genome[i]
+        ind.genome[cut1+1] = aux
 
 
     def __str__(self):
