@@ -9,3 +9,6 @@ __pycache__
 # Pycharm
 .idea
 last_problem.txt
+statistic_average_fitness.xls
+statistic_best_per_experiment.txt
+statistic_best_per_experiment_fitness.xls

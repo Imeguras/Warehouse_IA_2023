@@ -8,6 +8,7 @@ class Mutation3(Mutation):
         super().__init__(probability)
 
 
+    # Invert mutation
     def mutate(self, ind: IntVectorIndividual) -> None:
         num_genes = len(ind.genome)
         cut1 = GeneticAlgorithm.rand.randint(0, num_genes - 1)
@@ -26,7 +27,6 @@ class Mutation3(Mutation):
             ind.genome[i] = ind.genome[endCount]
             ind.genome[endCount] = aux
             endCount -= 1
-        pass
 
     def __str__(self):
         return "Mutation 3 (" + f'{self.probability}' + ")"

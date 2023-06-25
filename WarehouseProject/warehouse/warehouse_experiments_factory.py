@@ -44,9 +44,9 @@ class WarehouseExperimentsFactory(ExperimentsFactory):
         match self.get_parameter_value('Recombination'):
             case 'pmx':
                 self.recombination_method = RecombinationPMX(recombination_probability)
-            case 'recombination2':
+            case 'ox1':
                 self.recombination_method = Recombination2(recombination_probability)
-            case 'recombination3':
+            case 'cycle':
                 self.recombination_method = Recombination3(recombination_probability)
 
         # MUTATION
@@ -54,9 +54,9 @@ class WarehouseExperimentsFactory(ExperimentsFactory):
         match self.get_parameter_value('Mutation'):
             case 'insert':
                 self.mutation_method = MutationInsert(mutation_probability)
-            case 'mutation2':
+            case 'swap':
                 self.mutation_method = Mutation2(mutation_probability)
-            case 'mutation3':
+            case 'invert':
                 self.mutation_method = Mutation3(mutation_probability)
 
         # PROBLEM
