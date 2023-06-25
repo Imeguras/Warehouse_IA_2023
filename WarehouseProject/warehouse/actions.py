@@ -33,8 +33,6 @@ class ActionRight(Action[WarehouseState]):
 
     def __str__(self):
         return "RIGHT"
-    
-    
 
 
 class ActionDown(Action[WarehouseState]):
@@ -51,8 +49,6 @@ class ActionDown(Action[WarehouseState]):
 
     def __str__(self):
         return "DOWN"
-    
-    
 
 
 class ActionLeft(Action[WarehouseState]):
@@ -69,5 +65,3 @@ class ActionLeft(Action[WarehouseState]):
 
     def __str__(self):
         return "LEFT"
-
-    

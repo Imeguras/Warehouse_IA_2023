@@ -13,7 +13,6 @@ from collections import defaultdict
 class WarehouseAgentSearch(Agent):
     S = TypeVar('S', bound=State)
 
-    
     def __init__(self, environment: S):
         super().__init__()
         self.initial_environment = environment
@@ -22,9 +21,7 @@ class WarehouseAgentSearch(Agent):
         self.products = []
         self.exit = None
         self.pairs = []
-        
         self.pairsDictionary = defaultdict(Pair)
-        
         for i in range(environment.rows):
             for j in range(environment.columns):
                 if environment.matrix[i][j] == constants.FORKLIFT:
@@ -33,32 +30,41 @@ class WarehouseAgentSearch(Agent):
                     self.exit = Cell(i, j)
                 elif environment.matrix[i][j] == constants.PRODUCT:
                     self.products.append(Cell(i, j))
-        self.fetch_pairs()
-    def fetch_pairs(self)->list:
-      #Isto e so para limpar o codigo 
-      def pair_raw_manager(target_list, cellOrigin, cellDestiny):
-        pair = Pair(cellOrigin, cellDestiny)
-        index_pair = len(self.pairs)
-        target_list.append(pair)
-        self.pairsDictionary[pair.hash()] = pair
 
-      def pair_product_manager(target_list, cellOrigin, cellDestiny): 
-        pair_raw_manager(target_list, cellOrigin, cellDestiny)
-        pair_raw_manager(target_list, cellDestiny, cellOrigin)
-      
-      for a in self.forklifts:
+        # TODO: clean this sh*t
+        for a in self.forklifts:
+            for p in self.products:
+              pair = Pair(a, p)
+              
+              # gets the index of future appended pair
+              index_pair = len(self.pairs)
+              self.pairs.append(pair)
+        
+              self.pairsDictionary[pair.hash()] = pair
+                
+
+        for i in range(len(self.products) - 1):
+            for j in range(i + 1, len(self.products)):
+              pair = Pair(self.products[i], self.products[j])
+              reversePair = Pair(self.products[j], self.products[i])
+              index_pair = len(self.pairs)
+              self.pairs.append(pair)
+              self.pairs.append(reversePair)
+              self.pairsDictionary[pair.hash()] = pair
+              self.pairsDictionary[reversePair.hash()] = reversePair
+              
+              
         for p in self.products:
-          pair_raw_manager(self.pairs, a, p)
-      
-      for i in range(len(self.products) - 1):
-        for j in range(i + 1, len(self.products)): 
-          pair_product_manager(self.pairs, self.products[i], self.products[j])
+          pair  = Pair(p, self.exit)
+          index_pair = len(self.pairs)
+          self.pairs.append(pair)
+          self.pairsDictionary[pair.hash()] = pair
 
-      for p in self.products:
-        pair_raw_manager(self.pairs, p, self.exit)
-
-      for a in self.forklifts:
-        pair_raw_manager(self.pairs, a, self.exit)          
+        for a in self.forklifts:
+          pair = Pair(a, self.exit)
+          index_pair = len(self.pairs)
+          self.pairs.append(pair )
+          self.pairsDictionary[pair.hash()] = pair
 
     def __str__(self) -> str:
         str = "Pairs:\n"
@@ -72,6 +78,3 @@ def read_state_from_txt_file(filename: str):
         float_puzzle = np.genfromtxt(file, delimiter=' ')
         return float_puzzle, num_rows, num_columns
 
-# returns all pairs
-
-   

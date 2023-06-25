@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
-from warehouse.cell import Cell
+
 S = TypeVar("S", bound='State')
 
 
@@ -17,6 +17,4 @@ class Action(ABC, Generic[S]):
     @abstractmethod
     def is_valid(self, state: S) -> bool:
         pass
-
-
 
