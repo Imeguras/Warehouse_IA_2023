@@ -1,6 +1,7 @@
 from ga.genetic_operators.recombination import Recombination
 from ga.individual import Individual
 
+
 class Recombination3(Recombination):
 
     def __init__(self, probability: float):
@@ -40,7 +41,6 @@ class Recombination3(Recombination):
                 child1[i] = ind2.genome[i]
             if child2[i] == -1:
                 child2[i] = ind1.genome[i]
-
 
         ind1.genome = child2
         ind2.genome = child1

@@ -7,6 +7,7 @@ class Recombination2(Recombination):
     def __init__(self, probability: float):
         super().__init__(probability)
 
+    # Ox1 crossover
     def recombine(self, ind1: Individual, ind2: Individual) -> None:
         num_genes = len(ind1.genome)
         cut1 = GeneticAlgorithm.rand.randint(0,num_genes -1)
