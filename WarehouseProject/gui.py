@@ -662,12 +662,13 @@ class SearchSolver(threading.Thread):
         
         for i in self.agent.pairs:
           teleportForklifts=copy.deepcopy(self.agent.initial_environment)
-          teleportForklifts.move_object(teleportForklifts.line_forklift, teleportForklifts.column_forklift,i.cell1.line, i.cell1.column) 
+          teleportForklifts.move_object(teleportForklifts.cell_forklift.line, teleportForklifts.cell_forklift.column,i.cell1.line, i.cell1.column) 
           problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
           solution_a = self.agent.solve_problem(problem)
           i.path_resolution=solution_a.actions
+          
           i.value = solution_a.cost
-
+         
         
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
@@ -691,7 +692,7 @@ class SolutionRunner(threading.Thread):
 
     def run(self):
         self.thread_running = True
-        forklift_path, steps = self.best_in_run.obtain_all_path()
+        forklift_path, steps, _irrelevant = self.best_in_run.obtain_all_path()
         old_cell = [None] * len(forklift_path)
         new_cells = []
         for step in range(steps - 1):
