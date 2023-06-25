@@ -38,14 +38,25 @@ class WarehouseState(State[Action]):
                   
     
 
-
+    
     #checks if a robot can go to a certain position
     def is_passageway(self, x, y) -> bool: 
       point = self.matrix[x][y]
       if(point is not None and (point == constants.FORKLIFT or  point == constants.EMPTY)):
         return True
       return False
+
+    #Great Language Moment: cant even method overload...    
+    def is_passageway_(self, cell: Cell)-> bool:
+      return self.is_passageway(cell.line, cell.column)
+    def overflows(self, x, y) -> bool:
+      if x < 0 or x >= self.rows or y < 0 or y >= self.columns:
+        return True
+      return False
       
+    def overflows_ (self, cell: Cell) -> bool:
+      return self.overflows(cell.line, cell.column)
+
     def can_move_down(self) -> bool:
       _is_passageway= lambda: self.is_passageway(self.cell_forklift.line + 1, self.cell_forklift.column)
       if self.cell_forklift.line + 1 < self.rows and _is_passageway() : 
