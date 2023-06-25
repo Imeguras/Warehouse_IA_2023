@@ -17,6 +17,9 @@ class Action(ABC, Generic[S]):
     @abstractmethod
     def is_valid(self, state: S) -> bool:
         pass
-
+     
+    @abstractmethod
+    def rev_action(self, cell: Cell) -> Cell:
+        pass
 
 

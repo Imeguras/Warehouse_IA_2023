@@ -1,7 +1,7 @@
 
 from agentsearch.action import Action
 from warehouse.warehouse_state import WarehouseState
-
+from warehouse.cell import Cell
 
 class ActionUp(Action[WarehouseState]):
 
@@ -14,6 +14,10 @@ class ActionUp(Action[WarehouseState]):
 
     def is_valid(self, state: WarehouseState) -> bool:
         return state.can_move_up()
+         
+    
+    def rev_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line + 1, cell.column)
 
     def __str__(self):
         return "UP"
@@ -31,6 +35,8 @@ class ActionRight(Action[WarehouseState]):
     def is_valid(self, state: WarehouseState) -> bool:
         return state.can_move_right()
 
+    def rev_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line, cell.column - 1)
     def __str__(self):
         return "RIGHT"
     
@@ -48,7 +54,8 @@ class ActionDown(Action[WarehouseState]):
 
     def is_valid(self, state: WarehouseState) -> bool:
         return state.can_move_down()
-
+    def rev_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line - 1, cell.column)
     def __str__(self):
         return "DOWN"
     
@@ -66,6 +73,9 @@ class ActionLeft(Action[WarehouseState]):
 
     def is_valid(self, state: WarehouseState) -> bool:
         return state.can_move_left()
+
+    def rev_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line, cell.column + 1)
 
     def __str__(self):
         return "LEFT"
