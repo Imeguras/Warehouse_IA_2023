@@ -8,25 +8,28 @@ from agentsearch.action import Action
 from warehouse.cell import Cell
 
 class WarehouseState(State[Action]):
-
-    def __init__(self, matrix: ndarray, rows, columns):
+    
+        
+    def __init__(self, matrix: ndarray, rows, columns, cell_forklift=Cell(0,0)):
         super().__init__()
         
         self.rows = rows
         self.columns = columns
         self.products = []
+        self.cell_forklift = cell_forklift
+
         #this one is just to make the products array start at index 1
         self.products.append(Cell(0,0))
         self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
-        
-        # TODO: Averiguate if state needs forklift refactoring to get cached forklifts instead of single var for only one this also aplies to exits
+      
         for i in range(self.rows):
-            for j in range(self.columns):
+          for j in range(self.columns):
               
                 self.matrix[i][j] = matrix[i][j]
                 if self.matrix[i][j] == constants.FORKLIFT:
-                    self.line_forklift = i
-                    self.column_forklift = j
+                  if cell_forklift.line == 0 and cell_forklift.column == 0: 
+                    self.cell_forklift = Cell(i, j)
+
                 if self.matrix[i][j] == constants.EXIT:
                     self.line_exit = i
                     self.column_exit = j
@@ -44,28 +47,28 @@ class WarehouseState(State[Action]):
       return False
       
     def can_move_down(self) -> bool:
-      _is_passageway= lambda: self.is_passageway(self.line_forklift + 1, self.column_forklift)
-      if self.line_forklift + 1 < self.rows and _is_passageway() : 
+      _is_passageway= lambda: self.is_passageway(self.cell_forklift.line + 1, self.cell_forklift.column)
+      if self.cell_forklift.line + 1 < self.rows and _is_passageway() : 
         return True 
       return False
 
     def can_move_up(self) -> bool:
-      _is_passageway= lambda: self.is_passageway(self.line_forklift - 1, self.column_forklift)
-      if self.line_forklift - 1 >= 0 and _is_passageway() : 
+      _is_passageway= lambda: self.is_passageway(self.cell_forklift.line - 1, self.cell_forklift.column)
+      if self.cell_forklift.line - 1 >= 0 and _is_passageway() : 
         return True 
       return False
 
    
     
     def can_move_right(self) -> bool:
-      _is_passageway = lambda: self.is_passageway(self.line_forklift , self.column_forklift + 1) 
-      if self.column_forklift + 1 < self.columns and _is_passageway(): 
+      _is_passageway = lambda: self.is_passageway(self.cell_forklift.line , self.cell_forklift.column + 1) 
+      if self.cell_forklift.column + 1 < self.columns and _is_passageway(): 
         return True 
       return False
 
     def can_move_left(self) -> bool:
-      _is_passageway = lambda: self.is_passageway(self.line_forklift, self.column_forklift - 1)
-      if self.column_forklift - 1 >= 0 and _is_passageway(): 
+      _is_passageway = lambda: self.is_passageway(self.cell_forklift.line, self.cell_forklift.column - 1)
+      if self.cell_forklift.column - 1 >= 0 and _is_passageway(): 
         return True 
       return False
     #this tipically should be used with forklifts
@@ -75,35 +78,35 @@ class WarehouseState(State[Action]):
       self.matrix[x][y] = constants.EMPTY
       self.matrix[x1][y1]= previousOcuppier
       if self.matrix[x1][y1] == constants.FORKLIFT:
-        self.line_forklift = x1
-        self.column_forklift = y1
+        self.cell_forklift.line = x1
+        self.cell_forklift.column = y1
 
     def move_down(self) -> None:
       if self.can_move_down():
-        axis = self.line_forklift + 1
-        self.move_object(self.line_forklift,self.column_forklift, axis, self.column_forklift)
+        axis = self.cell_forklift.line + 1
+        self.move_object(self.cell_forklift.line,self.cell_forklift.column, axis, self.cell_forklift.column)
 
 
     def move_up(self) -> None:
       if self.can_move_up():
-        axis = self.line_forklift -1
-        self.move_object(self.line_forklift,self.column_forklift, axis,self.column_forklift)
+        axis = self.cell_forklift.line -1
+        self.move_object(self.cell_forklift.line,self.cell_forklift.column, axis,self.cell_forklift.column)
         
 
    
     def move_right(self) -> None:
       if self.can_move_right():
-        axis = self.column_forklift + 1
-        self.move_object(self.line_forklift,self.column_forklift, self.line_forklift, axis)
+        axis = self.cell_forklift.column + 1
+        self.move_object(self.cell_forklift.line,self.cell_forklift.column, self.cell_forklift.line, axis)
 
     def move_left(self) -> None:
       if self.can_move_left(): 
-        axis = self.column_forklift - 1
-        self.move_object(self.line_forklift,self.column_forklift, self.line_forklift , axis)
+        axis = self.cell_forklift.column - 1
+        self.move_object(self.cell_forklift.line,self.cell_forklift.column, self.cell_forklift.line , axis)
 
     def get_cell_color(self, row: int, column: int) -> Color:
         if row == self.line_exit and column == self.column_exit and (
-                row != self.line_forklift or column != self.column_forklift):
+                row != self.cell_forklift.line or column != self.cell_forklift.column):
             return constants.COLOREXIT
 
         if self.matrix[row][column] == constants.PRODUCT_CATCH:
