@@ -11,27 +11,25 @@ class WarehouseIndividual(IntVectorIndividual):
         super().__init__(problem, num_genes)
         self.problem = problem
         self.genome = []
-        #self.genome = self.generate_genome(num_genes)
         
-        # self.cost = 0
-        # RETODO
 
     def compute_fitness(self) -> float:
       # Por agora self.fitness = obtain_all_path total cost
-      #TODO tomar em conta colisões e o custo até ao ponto de retorno
+      #TODO tomar em conta colisões 
       self.fitness = 0.0
       (palatin_matrix, _irrelevant ) = self.obtain_all_path()
+      # count the forklif
       
-      #print(palatin_matrix)
       for i in range(len(palatin_matrix)):
         self.fitness += len(palatin_matrix[i])
-
+      # contar colisoes
+      
 
       return self.fitness
 
     def generate_genome(self, num_genes: int):
         tmpProducts = list(range(1,num_genes+1))
-      
+
         for i in range(0,num_genes):
             randomIndex = GeneticAlgorithm.rand.randrange(0,num_genes)
             self.genome.append(tmpProducts[randomIndex])
