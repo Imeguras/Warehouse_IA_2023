@@ -31,8 +31,7 @@ class WarehouseIndividual(IntVectorIndividual):
         for i in range(len(palatin_matrix)):
           #check if palatin_matrix[i][j] is in bounds
           if j < len(palatin_matrix[i]) and palatin_matrix[i][j] is not None:
-
-            if palatin_matrix[i][j] is not None and palatin_matrix[i][j] in temp:
+            if palatin_matrix[i][j] in temp:
               #print("colisao"+palatin_matrix[i][j].__str__())
               self.fitness += self.collisionPunishment
             temp.append(palatin_matrix[i][j])
