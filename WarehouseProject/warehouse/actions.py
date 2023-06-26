@@ -16,8 +16,13 @@ class ActionDown(Action[WarehouseState]):
 
     def is_valid(self, state: WarehouseState) -> bool:
         return state.can_move_down()
-    def rev_action(self, cell: Cell) -> Cell:
+    
+    def rev_action(self,  cell: Cell) -> Cell:
         return Cell(cell.line - 1, cell.column)
+
+    def sim_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line + 1, cell.column)
+
     def __str__(self):
         return "DOWN"
   
@@ -36,7 +41,8 @@ class ActionUp(Action[WarehouseState]):
     
     def rev_action(self, cell: Cell) -> Cell:
         return Cell(cell.line + 1, cell.column)
-
+    def sim_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line - 1, cell.column)
     def __str__(self):
         return "UP"
 class ActionRight(Action[WarehouseState]):
@@ -47,15 +53,17 @@ class ActionRight(Action[WarehouseState]):
     def execute(self, state: WarehouseState) -> None:
         state.move_right()
         state.action = self
-
+    
     def is_valid(self, state: WarehouseState) -> bool:
         return state.can_move_right()
 
     def rev_action(self, cell: Cell) -> Cell:
         return Cell(cell.line, cell.column - 1)
+    def sim_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line, cell.column + 1)
     def __str__(self):
         return "RIGHT"
-        
+
 class ActionLeft(Action[WarehouseState]):
 
     def __init__(self):
@@ -70,7 +78,9 @@ class ActionLeft(Action[WarehouseState]):
 
     def rev_action(self, cell: Cell) -> Cell:
         return Cell(cell.line, cell.column + 1)
-
+    def sim_action(self, cell: Cell) -> Cell:
+        return Cell(cell.line, cell.column - 1)
+        
     def __str__(self):
         return "LEFT"
     

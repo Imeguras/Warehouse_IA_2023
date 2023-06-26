@@ -22,4 +22,6 @@ class Action(ABC, Generic[S]):
     def rev_action(self, cell: Cell) -> Cell:
         pass
 
-
+    @abstractmethod
+    def sim_action(self, cell: Cell) -> Cell:
+        pass

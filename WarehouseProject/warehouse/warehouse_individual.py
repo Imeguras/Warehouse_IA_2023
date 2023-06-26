@@ -2,6 +2,7 @@ from ga.individual_int_vector import IntVectorIndividual
 from ga.genetic_algorithm import GeneticAlgorithm
 from warehouse.pair import Pair
 from warehouse.cell import Cell
+from agentsearch.action import Action
 import random
 import copy
 class WarehouseIndividual(IntVectorIndividual):
@@ -19,7 +20,7 @@ class WarehouseIndividual(IntVectorIndividual):
       # Por agora self.fitness = obtain_all_path total cost
       #TODO tomar em conta colisões e o custo até ao ponto de retorno
       self.fitness = 0.0
-      (_irrelevant2, _irrelevant, palatin_matrix) = self.obtain_all_path()
+      (palatin_matrix, _irrelevant ) = self.obtain_all_path()
       
       #print(palatin_matrix)
       for i in range(len(palatin_matrix)):
@@ -49,81 +50,114 @@ class WarehouseIndividual(IntVectorIndividual):
     
     #Adendum por agora so vai dar uma lista de listas com todas as actions para chegar do inicio até ao ponto em que ele tera de voltar ao fim
     def obtain_all_path(self):
-      actionListForklift = []
-      num_forklifts = len(self.problem.agent_search.forklifts)
+      def simulate_actions(path: list, initial_cell: Cell):
+        out_list = []
+        for action in path:
+          out_list.append(action.sim_action(initial_cell))
+          initial_cell = out_list[-1]
+        return out_list
+        
       cellListofLists = []
+      num_forklifts = len(self.problem.agent_search.forklifts)
       for f in range(num_forklifts):
-        actionListForklift.append([])
         cellListofLists.append([])
-
-      previous_cell = Cell(0,0)
+      
       for i in range(len(self.genome)):
         currentForklift = (i % num_forklifts)
-        previous_product_index = i - num_forklifts
-        
-        # get the last cell and the current 
-        
-        current_cell = self.problem.agent_search.initial_environment.products[self.genome[i]]
-        if previous_product_index < 0:
+        if len(cellListofLists[currentForklift]) > 0:
+          previous_cell = cellListofLists[currentForklift][-1]
+        else: 
           previous_cell = self.problem.agent_search.forklifts[currentForklift]
         
-        # create a temporary pair for formalities
-        pair=self.get_real_pair_references(Pair(previous_cell, current_cell))
-        
-        # get path of pair 
+        current_cell = self.problem.agent_search.initial_environment.products[self.genome[i]]
+
+        # Fetch the pair from the dictionary
+        pair = self.get_real_pair_references(Pair(previous_cell, current_cell))
+        # get path of pair
         path = pair.path_resolution
-        
-        
+
+        real_deal = simulate_actions(path, previous_cell)
         # Concatenate the path to its corresponding sublist in actionListForklift
-        actionListForklift[currentForklift] += path
-        # get last action of the forklift
-        last_action = actionListForklift[currentForklift][-1]
-        previous_product_index+=1
-        if previous_product_index >= 0:
-          previous_cell = last_action.rev_action(
-            self.problem.agent_search.initial_environment.products[
-              self.genome[
-                previous_product_index
-                ]
-              ]
-            )
+        cellListofLists[currentForklift] += real_deal
+        
+      return (cellListofLists, len(max(cellListofLists, key=len)))
+      # actionListForklift = []
+      # cellListofLists = []
+      # num_forklifts = len(self.problem.agent_search.forklifts)
+      
+      # for f in range(num_forklifts):
+      #   actionListForklift.append([])
+      #   cellListofLists.append([])
+
+      # previous_cell = Cell(0,0)
+      # for i in range(len(self.genome)):
+      #   currentForklift = (i % num_forklifts)
+      #   previous_product_index = i - num_forklifts
+        
+      #   # get the last cell and the current 
+        
+      #   current_cell = self.problem.agent_search.initial_environment.products[self.genome[i]]
+      #   if previous_product_index < 0:
+      #     previous_cell = self.problem.agent_search.forklifts[currentForklift]
+        
+      #   # create a temporary pair for formalities
+      #   pair=self.get_real_pair_references(Pair(previous_cell, current_cell))
+        
+      #   # get path of pair 
+      #   path = pair.path_resolution
+        
+        
+      #   # Concatenate the path to its corresponding sublist in actionListForklift
+      #   actionListForklift[currentForklift] += path
+      #   # get last action of the forklift
+        
+      #   previous_product_index+=1
+      #   if previous_product_index >= 0:
+      #     previous_cell = 
+      #     #previous_cell = last_action.rev_action(
+      #     #  self.problem.agent_search.initial_environment.products[
+      #     #    self.genome[
+      #     #      previous_product_index
+      #     #      ]
+      #     #    ]
+      #     #  )
 
 
       
-      for i in range(len(actionListForklift)):
-        last_action = actionListForklift[i][-1]
-          # add a last pair resolution to the actionListForklift so that the forklift returns to the exit
-        if (len(actionListForklift[i]) == 0):
-          #send him straight to the exit
-          exit_cell = self.get_real_pair_references(Pair(self.problem.agent_search.forklifts[i], self.problem.agent_search.exit))
-        else:
-          #here we are just adding the path from the last product to the exit
+      # for i in range(len(actionListForklift)):
+      #   last_action = actionListForklift[i][-1]
+      #     # add a last pair resolution to the actionListForklift so that the forklift returns to the exit
+      #   if (len(actionListForklift[i]) == 0):
+      #     #send him straight to the exit
+      #     exit_cell = self.get_real_pair_references(Pair(self.problem.agent_search.forklifts[i], self.problem.agent_search.exit))
+      #   else:
+      #     #here we are just adding the path from the last product to the exit
 
-          # the last index of the first forklift in the genome is [- num of forklift]
-          index = num_forklifts - i 
-          product_index = self.genome[-index]
+      #     # the last index of the first forklift in the genome is [- num of forklift]
+      #     index = num_forklifts - i 
+      #     product_index = self.genome[-index]
         
-          #fetch the cell of the last product 
+      #     #fetch the cell of the last product 
 
-          last_ProductCell = last_action.rev_action(self.problem.agent_search.initial_environment.products[
-            product_index
-            ])
-          exit_cell = self.get_real_pair_references(Pair(last_ProductCell, self.problem.agent_search.exit))
+      #     last_ProductCell = last_action.rev_action(self.problem.agent_search.initial_environment.products[
+      #       product_index
+      #       ])
+      #     exit_cell = self.get_real_pair_references(Pair(last_ProductCell, self.problem.agent_search.exit))
           
-        #lets add exit then 
-        forklift_directExitPath = exit_cell.path_resolution
-        actionListForklift[i] += forklift_directExitPath
+      #   #lets add exit then 
+      #   forklift_directExitPath = exit_cell.path_resolution
+      #   actionListForklift[i] += forklift_directExitPath
         
 
 
 
-        state = copy.deepcopy(self.problem.agent_search.initial_environment)
-        state.cell_forklift = copy.deepcopy(self.problem.agent_search.forklifts[i])
-        for j in range(len(actionListForklift[i])):
-          actionListForklift[i][j].execute(state)
+      #   state = copy.deepcopy(self.problem.agent_search.initial_environment)
+      #   state.cell_forklift = copy.deepcopy(self.problem.agent_search.forklifts[i])
+      #   for j in range(len(actionListForklift[i])):
+      #     actionListForklift[i][j].execute(state)
           
-          cellListofLists[i].append(Cell(state.cell_forklift.line, state.cell_forklift.column))
-      return (cellListofLists, len(max(actionListForklift, key=len)), actionListForklift )  
+      #     cellListofLists[i].append(Cell(state.cell_forklift.line, state.cell_forklift.column))
+      # return (cellListofLists, len(max(actionListForklift, key=len)), actionListForklift )  
         
 
 
