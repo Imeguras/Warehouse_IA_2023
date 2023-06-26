@@ -29,4 +29,4 @@ class Mutation3(Mutation):
             endCount -= 1
 
     def __str__(self):
-        return "Mutation 3 (" + f'{self.probability}' + ")"
+        return "Invert mutation (" + f'{self.probability}' + ")"

@@ -46,4 +46,4 @@ class Recombination3(Recombination):
         ind2.genome = child1
 
     def __str__(self):
-        return "Recombination 3 (" + f'{self.probability}' + ")"
+        return "Cycle recombination (" + f'{self.probability}' + ")"

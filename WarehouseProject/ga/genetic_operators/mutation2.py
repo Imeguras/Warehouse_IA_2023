@@ -7,6 +7,7 @@ class Mutation2(Mutation):
     def __init__(self, probability):
         super().__init__(probability)
 
+    # Swap mutation
     def mutate(self, ind: IntVectorIndividual) -> None:
         num_genes = len(ind.genome)
         cut1 = GeneticAlgorithm.rand.randint(0, num_genes-1)
@@ -18,4 +19,4 @@ class Mutation2(Mutation):
         ind.genome[cut1], ind.genome[cut2] = ind.genome[cut2], ind.genome[cut1]
 
     def __str__(self):
-        return "Mutation 2 (" + f'{self.probability}' + ")"
+        return "Swap mutation (" + f'{self.probability}' + ")"

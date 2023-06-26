@@ -14,7 +14,7 @@ class StatisticBestAverage(GAListener, ExperimentListener):
         self.run = 0
         if not os.path.isfile('statistic_average_fitness.xls'):
             with open('statistic_average_fitness.xls', 'a+') as file:
-                file.write(experiment_header + '\t' + 'Average:' + '\t' + 'StdDev:' + '\n')
+                file.write(experiment_header + '\t' + 'Average:' + '\t' + 'StdDev:' + '\t' + 'Mean' + '\t' + 'Median' + '\n')
 
     def generation_ended(self, ga_event: GAEvent) -> None:
         pass
@@ -27,5 +27,9 @@ class StatisticBestAverage(GAListener, ExperimentListener):
     def experiment_ended(self, experiment_event: ExperimentEvent) -> None:
         average = np.average(self.values)
         sd = np.std(self.values)
+        mean = np.mean(self.values)
+        median = np.median(self.values)
+
+
         with open('statistic_average_fitness.xls', 'a') as file:
-            file.write(experiment_event.experiment.experiment_values + '\t' + str(average) + '\t' + str(sd) + '\n')
+            file.write(experiment_event.experiment.experiment_values + '\t' + str(average) + '\t' + str(sd) + '\t' + str(mean) + '\t' + str(median) + '\n')
