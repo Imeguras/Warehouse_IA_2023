@@ -3,7 +3,7 @@ import copy
 from ga.population import Population
 from ga.selection_methods.selection_method import SelectionMethod
 from ga.ga_event import GAEvent
-
+import cProfile
 # static variable for random
 rand = Random()
 
@@ -34,6 +34,8 @@ class GeneticAlgorithm:
         self.stopped = True
 
     def run(self) -> None:
+        profiler = cProfile.Profile()
+        profiler.enable()
         if self.problem is None:
             return None
         self.generation = 0
@@ -51,6 +53,9 @@ class GeneticAlgorithm:
                 self.best_in_run = copy.deepcopy(self.population.best_individual)
             self.generation += 1
             self.fire_generation_ended()
+        profiler.disable() 
+        profiler.print_stats(sort='cumtime')
+        print("---------------GA----------------")
         self.fire_run_ended()
 
     def __str__(self):

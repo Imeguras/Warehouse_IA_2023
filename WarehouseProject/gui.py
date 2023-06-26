@@ -342,6 +342,8 @@ class Window(tk.Tk):
         self.solver.start()
 
     def runGA_button_clicked(self):
+        profiler = cProfile.Profile()
+        profiler.enable()
         self.problem_ga = WarehouseProblemGA(self.agent_search)
         
         if self.problem_ga is None:
@@ -389,7 +391,8 @@ class Window(tk.Tk):
                             open_experiments=tk.DISABLED, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
                             simulation=tk.NORMAL, stop_simulation=tk.DISABLED)
         self.entry_status.delete(0, tk.END)
-
+        
+        
     def sim_button_clicked(self):
 
         self.manage_buttons(data_set=tk.DISABLED, runSearch=tk.DISABLED, runGA=tk.DISABLED, stop=tk.DISABLED,
@@ -634,7 +637,7 @@ class ExperimentsRunner(threading.Thread):
 
     def run(self):
         self.thread_running = True
-
+    
         while self.experiments_factory.has_more_experiments() and self.thread_running:
             experiment = self.experiments_factory.next_experiment()
             experiment.run()
@@ -684,8 +687,7 @@ class SearchSolver(threading.Thread):
          
         profiler.disable() 
         profiler.print_stats(sort='cumtime')
-        print("----------------------------------------")
-        self.gui.text_problem.insert(tk.END, "Finished in:" + str() + " seconds\n")
+        print("---------------SEARCH----------------")
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
