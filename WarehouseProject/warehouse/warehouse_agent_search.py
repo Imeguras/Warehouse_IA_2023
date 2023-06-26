@@ -67,7 +67,7 @@ class WarehouseAgentSearch(Agent):
         for j in range(len(self.products)): 
           if i != j:
             pair_product_manager(self.pairs, self.products[i], self.products[j])
-            pair_product_manager(self.pairs, self.products[j], self.products[i])
+           # pair_product_manager(self.pairs, self.products[j], self.products[i])
 
       for p in self.products:
         pair_product_manager(self.pairs, p, self.exit)
