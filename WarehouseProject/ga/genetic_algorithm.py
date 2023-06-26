@@ -15,7 +15,9 @@ class GeneticAlgorithm:
                  max_generations: int,
                  selection_method: SelectionMethod,
                  recombination: "Recombination",
-                 mutation: "Mutation"):
+                 mutation: "Mutation", 
+                 collision_penalty: float = 10.0
+                 ):
         self.rand = Random(seed)
         self.population_size = population_size
         self.max_generations = max_generations
@@ -27,6 +29,7 @@ class GeneticAlgorithm:
         self.stopped = False
         self.best_in_run = None
         self.problem = None
+        self.collision_penalty = collision_penalty
         self.listeners = []
  
 
@@ -34,12 +37,15 @@ class GeneticAlgorithm:
         self.stopped = True
 
     def run(self) -> None:
+        
         profiler = cProfile.Profile()
         profiler.enable()
+
         if self.problem is None:
             return None
         self.generation = 0
-        self.population = Population(self.population_size, self.problem)
+        self.problem.collisionPunishment = self.collision_penalty
+        self.population = Population(self.population_size, self.problem, self.collision_penalty)
         self.population.evaluate()
         self.best_in_run = self.population.best_individual
         self.fire_generation_ended()

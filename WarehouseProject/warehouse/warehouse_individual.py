@@ -7,10 +7,11 @@ import random
 import copy
 class WarehouseIndividual(IntVectorIndividual):
 
-    def __init__(self, problem: "WarehouseProblem", num_genes: int):
+    def __init__(self, problem: "WarehouseProblem", num_genes: int, collisionPunishment: float=10.0):
         super().__init__(problem, num_genes)
         self.problem = problem
         self.genome = []
+        self.collisionPunishment = collisionPunishment
         
 
     def compute_fitness(self) -> float:
@@ -32,8 +33,8 @@ class WarehouseIndividual(IntVectorIndividual):
           if j < len(palatin_matrix[i]) and palatin_matrix[i][j] is not None:
 
             if palatin_matrix[i][j] is not None and palatin_matrix[i][j] in temp:
-              print("colisao"+palatin_matrix[i][j].__str__())
-              self.fitness += 10
+              #print("colisao"+palatin_matrix[i][j].__str__())
+              self.fitness += self.collisionPunishment
             temp.append(palatin_matrix[i][j])
       
 

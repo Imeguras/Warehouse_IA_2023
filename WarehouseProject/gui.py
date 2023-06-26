@@ -117,42 +117,50 @@ class Window(tk.Tk):
         self.entry_tournament_size.insert(tk.END, '2')
         self.entry_tournament_size.grid(row=4, column=1)
 
+        self.label_punish_collision = tk.Label(master=self.panel_parameters, text="Punish collision: ",
+                                                anchor="e", width=25) 
+        self.label_punish_collision.grid(row=5, column=0)
+        
+        self.entry_collision_penalty = tk.Entry(master=self.panel_parameters, width=17)
+        self.entry_collision_penalty.insert(tk.END, '10.0')
+        self.entry_collision_penalty.grid(row=5, column=1)
+        
         self.label_recombination_methods = tk.Label(master=self.panel_parameters, text="Recombination method: ",
                                                     anchor="e", width=25)
-        self.label_recombination_methods.grid(row=5, column=0)
+        self.label_recombination_methods.grid(row=6, column=0)
 
         recombination_methods = ['PMX', 'OX1', 'Cycle']
 
         self.combo_recombination_methods = ttk.Combobox(master=self.panel_parameters, state="readonly",
                                                         values=recombination_methods, width=14)
         self.combo_recombination_methods.set(recombination_methods[0])
-        self.combo_recombination_methods.grid(row=5, column=1)
+        self.combo_recombination_methods.grid(row=6, column=1)
 
         self.label_recombination_prob = tk.Label(master=self.panel_parameters, text="Recombination prob.: ",
                                                  anchor="e", width=25)
-        self.label_recombination_prob.grid(row=6, column=0)
+        self.label_recombination_prob.grid(row=7, column=0)
 
         self.entry_recombination_prob = tk.Entry(master=self.panel_parameters, width=17)
         self.entry_recombination_prob.insert(tk.END, '0.7')
-        self.entry_recombination_prob.grid(row=6, column=1)
+        self.entry_recombination_prob.grid(row=7, column=1)
 
         self.label_mutation_methods = tk.Label(master=self.panel_parameters, text="Mutation method: ",
                                                anchor="e", width=25)
-        self.label_mutation_methods.grid(row=7, column=0)
+        self.label_mutation_methods.grid(row=8, column=0)
 
         mutation_methods = ['Insert', 'Swap', 'Invert']
 
         self.combo_mutation_methods = ttk.Combobox(master=self.panel_parameters, state="readonly",
                                                    values=mutation_methods, width=14)
         self.combo_mutation_methods.set(mutation_methods[0])
-        self.combo_mutation_methods.grid(row=7, column=1)
+        self.combo_mutation_methods.grid(row=8, column=1)
 
         self.label_mutation_prob = tk.Label(master=self.panel_parameters, text="Mutation prob.: ", anchor="e", width=25)
-        self.label_mutation_prob.grid(row=8, column=0)
+        self.label_mutation_prob.grid(row=9, column=0)
 
         self.entry_mutation_prob = tk.Entry(master=self.panel_parameters, width=17)
         self.entry_mutation_prob.insert(tk.END, '0.1')
-        self.entry_mutation_prob.grid(row=8, column=1)
+        self.entry_mutation_prob.grid(row=9, column=1)
 
         # 1.1.2 Run Panel
 
@@ -365,14 +373,15 @@ class Window(tk.Tk):
             float(self.entry_mutation_prob.get())) if mutation_methods_index == 0 else \
             Mutation2(float(self.entry_mutation_prob.get())) if mutation_methods_index == 1 else \
                 Mutation3(float(self.entry_mutation_prob.get()))
-
+        collision_penalty = float(self.entry_collision_penalty.get())
         self.genetic_algorithm = GeneticAlgorithmThread(
             int(self.entry_seed.get()),
             int(self.entry_population_size.get()),
             int(self.entry_num_generations.get()),
             selection_method,
             recombination_method,
-            mutation_method
+            mutation_method, 
+            collision_penalty
         )
 
         
@@ -578,7 +587,8 @@ class Window(tk.Tk):
         except ValueError:
             messagebox.showwarning("Warning", "Population size should be an even positive integer")
             return False
-
+        
+        
         try:
             num_generations = int(self.entry_num_generations.get())
             if num_generations <= 0:
@@ -599,7 +609,15 @@ class Window(tk.Tk):
                 messagebox.showwarning("Warning", "Tournament size should be a positive integer larger than 1"
                                                   " and smaller than the population size")
                 return False
-
+        try: 
+            collision_penalty = float(self.entry_collision_penalty.get())
+            # TODO: uncomment this 
+            #if collision_penalty < 0:
+            # messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+            #  return False
+        except ValueError:
+              messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+              return False
         try:
             recombination_prob = float(self.entry_recombination_prob.get())
             if recombination_prob < 0 or recombination_prob > 1:
