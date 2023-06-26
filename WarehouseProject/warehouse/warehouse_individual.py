@@ -21,7 +21,8 @@ class WarehouseIndividual(IntVectorIndividual):
       # count the forklif
       
       for i in range(len(palatin_matrix)):
-        self.fitness += len(palatin_matrix[i])
+        #spawnar o forklift não conta como passo e para a animação não bugar precisa de spawnar 
+        self.fitness += len(palatin_matrix[i])-1
       # contar colisoes
 
 
@@ -58,7 +59,9 @@ class WarehouseIndividual(IntVectorIndividual):
       cellListofLists = []
       num_forklifts = len(self.problem.agent_search.forklifts)
       for f in range(num_forklifts):
-        cellListofLists.append([])
+        cellListofLists.append([
+          self.problem.agent_search.forklifts[f]
+        ])
       
       for i in range(len(self.genome)):
         currentForklift = (i % num_forklifts)
@@ -91,86 +94,7 @@ class WarehouseIndividual(IntVectorIndividual):
         cellListofLists[i] += real_deal
         
       return (cellListofLists, len(max(cellListofLists, key=len)))
-      # actionListForklift = []
-      # cellListofLists = []
-      # num_forklifts = len(self.problem.agent_search.forklifts)
       
-      # for f in range(num_forklifts):
-      #   actionListForklift.append([])
-      #   cellListofLists.append([])
-
-      # previous_cell = Cell(0,0)
-      # for i in range(len(self.genome)):
-      #   currentForklift = (i % num_forklifts)
-      #   previous_product_index = i - num_forklifts
-        
-      #   # get the last cell and the current 
-        
-      #   current_cell = self.problem.agent_search.initial_environment.products[self.genome[i]]
-      #   if previous_product_index < 0:
-      #     previous_cell = self.problem.agent_search.forklifts[currentForklift]
-        
-      #   # create a temporary pair for formalities
-      #   pair=self.get_real_pair_references(Pair(previous_cell, current_cell))
-        
-      #   # get path of pair 
-      #   path = pair.path_resolution
-        
-        
-      #   # Concatenate the path to its corresponding sublist in actionListForklift
-      #   actionListForklift[currentForklift] += path
-      #   # get last action of the forklift
-        
-      #   previous_product_index+=1
-      #   if previous_product_index >= 0:
-      #     previous_cell = 
-      #     #previous_cell = last_action.rev_action(
-      #     #  self.problem.agent_search.initial_environment.products[
-      #     #    self.genome[
-      #     #      previous_product_index
-      #     #      ]
-      #     #    ]
-      #     #  )
-
-
-      
-      # for i in range(len(actionListForklift)):
-      #   last_action = actionListForklift[i][-1]
-      #     # add a last pair resolution to the actionListForklift so that the forklift returns to the exit
-      #   if (len(actionListForklift[i]) == 0):
-      #     #send him straight to the exit
-      #     exit_cell = self.get_real_pair_references(Pair(self.problem.agent_search.forklifts[i], self.problem.agent_search.exit))
-      #   else:
-      #     #here we are just adding the path from the last product to the exit
-
-      #     # the last index of the first forklift in the genome is [- num of forklift]
-      #     index = num_forklifts - i 
-      #     product_index = self.genome[-index]
-        
-      #     #fetch the cell of the last product 
-
-      #     last_ProductCell = last_action.rev_action(self.problem.agent_search.initial_environment.products[
-      #       product_index
-      #       ])
-      #     exit_cell = self.get_real_pair_references(Pair(last_ProductCell, self.problem.agent_search.exit))
-          
-      #   #lets add exit then 
-      #   forklift_directExitPath = exit_cell.path_resolution
-      #   actionListForklift[i] += forklift_directExitPath
-        
-
-
-
-      #   state = copy.deepcopy(self.problem.agent_search.initial_environment)
-      #   state.cell_forklift = copy.deepcopy(self.problem.agent_search.forklifts[i])
-      #   for j in range(len(actionListForklift[i])):
-      #     actionListForklift[i][j].execute(state)
-          
-      #     cellListofLists[i].append(Cell(state.cell_forklift.line, state.cell_forklift.column))
-      # return (cellListofLists, len(max(actionListForklift, key=len)), actionListForklift )  
-        
-
-
       
     def __str__(self):
         string = 'Fitness: ' + f'{self.fitness}' + '\n'
