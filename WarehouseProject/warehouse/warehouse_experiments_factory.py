@@ -1,3 +1,5 @@
+import copy
+
 from experiments.experiments_factory import ExperimentsFactory
 from experiments.experiment import Experiment
 from experiments.experiment_listener import ExperimentListener
@@ -13,6 +15,7 @@ from experiments_statistics.statistic_best_in_run import StatisticBestInRun
 from experiments_statistics.statistic_best_average import StatisticBestAverage
 from warehouse.warehouse_agent_search import read_state_from_txt_file, WarehouseAgentSearch
 from warehouse.warehouse_problemforGA import WarehouseProblemGA
+from warehouse.warehouse_problemforSearch import WarehouseProblemSearch
 from warehouse.warehouse_state import WarehouseState
 
 
@@ -44,9 +47,9 @@ class WarehouseExperimentsFactory(ExperimentsFactory):
         match self.get_parameter_value('Recombination'):
             case 'pmx':
                 self.recombination_method = RecombinationPMX(recombination_probability)
-            case 'recombination2':
+            case 'ox1':
                 self.recombination_method = Recombination2(recombination_probability)
-            case 'recombination3':
+            case 'cycle':
                 self.recombination_method = Recombination3(recombination_probability)
 
         # MUTATION
@@ -54,9 +57,9 @@ class WarehouseExperimentsFactory(ExperimentsFactory):
         match self.get_parameter_value('Mutation'):
             case 'insert':
                 self.mutation_method = MutationInsert(mutation_probability)
-            case 'mutation2':
+            case 'swap':
                 self.mutation_method = Mutation2(mutation_probability)
-            case 'mutation3':
+            case 'invert':
                 self.mutation_method = Mutation3(mutation_probability)
 
         # PROBLEM
@@ -64,6 +67,16 @@ class WarehouseExperimentsFactory(ExperimentsFactory):
 
         agent_search = WarehouseAgentSearch(WarehouseState(matrix, num_rows, num_columns))
         # TODO calculate pair distances for experiments
+
+        for i in agent_search.pairs:
+            teleportForklifts=copy.deepcopy(agent_search.initial_environment)
+            teleportForklifts.move_object(teleportForklifts.cell_forklift.line, teleportForklifts.cell_forklift.column,i.cell1.line, i.cell1.column)
+            problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
+            solution_a = agent_search.solve_problem(problem)
+            i.path_resolution=solution_a.actions
+
+            i.value = solution_a.cost
+
         self.problem = WarehouseProblemGA(agent_search)
 
         experiment_textual_representation = self.build_experiment_textual_representation()

@@ -1,6 +1,7 @@
 from ga.genetic_operators.recombination import Recombination
 from ga.individual import Individual
 
+
 class Recombination3(Recombination):
 
     def __init__(self, probability: float):
@@ -41,9 +42,8 @@ class Recombination3(Recombination):
             if child2[i] == -1:
                 child2[i] = ind1.genome[i]
 
-
         ind1.genome = child2
         ind2.genome = child1
 
     def __str__(self):
-        return "Recombination 3 (" + f'{self.probability}' + ")"
+        return "Cycle recombination (" + f'{self.probability}' + ")"
