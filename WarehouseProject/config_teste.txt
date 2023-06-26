@@ -1,26 +1,26 @@
-Runs: 2
+Runs: 4
 
-Population_size: 100
+Population_size: 100,200
 
-Max_generations: 100
+Max_generations: 100,200,500,1000
 
 # --------------------------------
 
 Selection: tournament
 
-Tournament_size: 2, 4
+Tournament_size: 2, 4, 6
 
 # --------------------------------
 
-Recombination: pmx
+Recombination: pmx,ox1,cycle
 
 Recombination_probability: 0.7
 
 # --------------------------------
 
-Mutation: insert
+Mutation: insert,swap,invert
 
-Mutation_probability: 0.1
+Mutation_probability: 0.1,0.2
 
 # --------------------------------
 
