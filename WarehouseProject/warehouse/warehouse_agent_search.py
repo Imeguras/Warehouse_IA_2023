@@ -56,7 +56,6 @@ class WarehouseAgentSearch(Agent):
         ]
         
         for _cell in nearby_cells:
-
           if not self.initial_environment.overflows_(_cell) and self.initial_environment.is_passageway_(_cell):
             pair_raw_manager(target_list, _cell, cellDestiny)
 
@@ -68,12 +67,13 @@ class WarehouseAgentSearch(Agent):
         for j in range(len(self.products)): 
           if i != j:
             pair_product_manager(self.pairs, self.products[i], self.products[j])
+            pair_product_manager(self.pairs, self.products[j], self.products[i])
 
       for p in self.products:
-        pair_raw_manager(self.pairs, p, self.exit)
+        pair_product_manager(self.pairs, p, self.exit)
 
       for a in self.forklifts:
-        pair_raw_manager(self.pairs, a, self.exit)          
+        pair_product_manager(self.pairs, a, self.exit)          
 
     def __str__(self) -> str:
         str = "Pairs:\n"

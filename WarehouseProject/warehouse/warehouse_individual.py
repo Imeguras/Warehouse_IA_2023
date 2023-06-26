@@ -66,9 +66,7 @@ class WarehouseIndividual(IntVectorIndividual):
         current_cell = self.problem.agent_search.initial_environment.products[self.genome[i]]
         if previous_product_index < 0:
           previous_cell = self.problem.agent_search.forklifts[currentForklift]
-        #else: 
-         # previous_cell = self.problem.agent_search.initial_environment.products[self.genome[previous_product_index]]
-
+        
         # create a temporary pair for formalities
         pair=self.get_real_pair_references(Pair(previous_cell, current_cell))
         
@@ -80,11 +78,20 @@ class WarehouseIndividual(IntVectorIndividual):
         actionListForklift[currentForklift] += path
         # get last action of the forklift
         last_action = actionListForklift[currentForklift][-1]
-        previous_cell = last_action.rev_action(self.problem.agent_search.initial_environment.products[self.genome[previous_product_index]])
+        previous_product_index+=1
+        if previous_product_index >= 0:
+          previous_cell = last_action.rev_action(
+            self.problem.agent_search.initial_environment.products[
+              self.genome[
+                previous_product_index
+                ]
+              ]
+            )
 
 
       
       for i in range(len(actionListForklift)):
+        last_action = actionListForklift[i][-1]
           # add a last pair resolution to the actionListForklift so that the forklift returns to the exit
         if (len(actionListForklift[i]) == 0):
           #send him straight to the exit
@@ -97,7 +104,10 @@ class WarehouseIndividual(IntVectorIndividual):
           product_index = self.genome[-index]
         
           #fetch the cell of the last product 
-          last_ProductCell=self.problem.agent_search.initial_environment.products[product_index]
+
+          last_ProductCell = last_action.rev_action(self.problem.agent_search.initial_environment.products[
+            product_index
+            ])
           exit_cell = self.get_real_pair_references(Pair(last_ProductCell, self.problem.agent_search.exit))
           
         #lets add exit then 
