@@ -9,7 +9,7 @@ from warehouse.cell import Cell
 from warehouse.heuristic_warehouse import HeuristicWarehouse
 from warehouse.pair import Pair
 from collections import defaultdict
-
+import copy
 class WarehouseAgentSearch(Agent):
     S = TypeVar('S', bound=State)
 
@@ -43,22 +43,37 @@ class WarehouseAgentSearch(Agent):
         self.pairsDictionary[pair.hash()] = pair
 
       def pair_product_manager(target_list, cellOrigin, cellDestiny): 
-        pair_raw_manager(target_list, cellOrigin, cellDestiny)
-        pair_raw_manager(target_list, cellDestiny, cellOrigin)
-      
+        #pair_raw_manager(target_list, cellOrigin, cellDestiny)
+        #check whats nearby cellOrigin
+        
+        line = cellOrigin.line
+        column = cellOrigin.column
+        nearby_cells = [
+          Cell(line-1, column),
+          Cell(line+1, column),
+          Cell(line, column-1),
+          Cell(line, column+1)
+        ]
+        
+        for _cell in nearby_cells:
+          if not self.initial_environment.overflows_(_cell) and self.initial_environment.is_passageway_(_cell):
+            pair_raw_manager(target_list, _cell, cellDestiny)
+
       for a in self.forklifts:
         for p in self.products:
           pair_raw_manager(self.pairs, a, p)
       
-      for i in range(len(self.products) - 1):
-        for j in range(i + 1, len(self.products)): 
-          pair_product_manager(self.pairs, self.products[i], self.products[j])
+      for i in range(len(self.products)):
+        for j in range(len(self.products)): 
+          if i != j:
+            pair_product_manager(self.pairs, self.products[i], self.products[j])
+           # pair_product_manager(self.pairs, self.products[j], self.products[i])
 
       for p in self.products:
-        pair_raw_manager(self.pairs, p, self.exit)
+        pair_product_manager(self.pairs, p, self.exit)
 
       for a in self.forklifts:
-        pair_raw_manager(self.pairs, a, self.exit)          
+        pair_product_manager(self.pairs, a, self.exit)          
 
     def __str__(self) -> str:
         str = "Pairs:\n"

@@ -12,7 +12,7 @@ class Agent:
         self.heuristic = None
         self.solution = None
       
-
+   
     def solve_problem(self, problem: Problem) -> Solution:
         self.environment = problem.initial_state
         if self.heuristic is not None:

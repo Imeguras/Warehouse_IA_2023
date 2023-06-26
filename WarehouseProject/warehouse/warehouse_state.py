@@ -7,9 +7,12 @@ from agentsearch.state import State
 from agentsearch.action import Action
 from warehouse.cell import Cell
 
+
+
+
 class WarehouseState(State[Action]):
     
-        
+    
     def __init__(self, matrix: ndarray, rows, columns, cell_forklift=Cell(0,0)):
         super().__init__()
         
@@ -38,14 +41,25 @@ class WarehouseState(State[Action]):
                   
     
 
-
+    #@cached(max_size=1024)
     #checks if a robot can go to a certain position
     def is_passageway(self, x, y) -> bool: 
       point = self.matrix[x][y]
       if(point is not None and (point == constants.FORKLIFT or  point == constants.EMPTY)):
         return True
       return False
+
+    #Great Language Moment: cant even method overload...    
+    def is_passageway_(self, cell: Cell)-> bool:
+      return self.is_passageway(cell.line, cell.column)
+    def overflows(self, x, y) -> bool:
+      if x < 0 or x >= self.rows or y < 0 or y >= self.columns:
+        return True
+      return False
       
+    def overflows_ (self, cell: Cell) -> bool:
+      return self.overflows(cell.line, cell.column)
+
     def can_move_down(self) -> bool:
       _is_passageway= lambda: self.is_passageway(self.cell_forklift.line + 1, self.cell_forklift.column)
       if self.cell_forklift.line + 1 < self.rows and _is_passageway() : 
@@ -134,6 +148,20 @@ class WarehouseState(State[Action]):
         if isinstance(other, WarehouseState):
             return np.array_equal(self.matrix, other.matrix)
         return NotImplemented
+
+    # def __deepcopy__(self, memo={}):
+    #   constSizeMax=25
+    #   if self in memo:
+    #     print("cache hit")
+    #     return memo[self]
+    #   else:
+
+    #     new_state = WarehouseState(self.matrix, self.rows, self.columns, self.cell_forklift)
+    #     if len(memo) < constSizeMax:
+    #       memo[self] = new_state
+    #     # TODO: seria engraçado implementar FIFO ou frequencia cache
+          
+    #     return new_state
 
     def __hash__(self):
         return hash(self.matrix.tostring())
