@@ -146,5 +146,19 @@ class WarehouseState(State[Action]):
             return np.array_equal(self.matrix, other.matrix)
         return NotImplemented
 
+    # def __deepcopy__(self, memo={}):
+    #   constSizeMax=25
+    #   if self in memo:
+    #     print("cache hit")
+    #     return memo[self]
+    #   else:
+
+    #     new_state = WarehouseState(self.matrix, self.rows, self.columns, self.cell_forklift)
+    #     if len(memo) < constSizeMax:
+    #       memo[self] = new_state
+    #     # TODO: seria engraçado implementar FIFO ou frequencia cache
+          
+    #     return new_state
+
     def __hash__(self):
         return hash(self.matrix.tostring())

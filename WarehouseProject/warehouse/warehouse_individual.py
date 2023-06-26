@@ -23,7 +23,7 @@ class WarehouseIndividual(IntVectorIndividual):
       for i in range(len(palatin_matrix)):
         self.fitness += len(palatin_matrix[i])
       # contar colisoes
-      
+
 
       return self.fitness
 
@@ -182,7 +182,11 @@ class WarehouseIndividual(IntVectorIndividual):
         return True if self.fitness < other.fitness else False
 
     # __deepcopy__ is implemented here so that all individuals share the same problem instance
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo={}):
+        if self in memo:
+          # If this object has already been copied, return the memoized copy
+          print("cache hit")
+          return memo[self]
         new_instance = self.__class__(self.problem, self.num_genes)
         new_instance.genome = self.genome.copy()
         new_instance.fitness = self.fitness

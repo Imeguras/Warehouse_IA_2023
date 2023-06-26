@@ -11,6 +11,8 @@ import queue
 import threading
 import os
 from pathlib import Path
+import cProfile
+import pstats
 
 import constants
 from ga.genetic_operators.mutation2 import Mutation2
@@ -655,13 +657,25 @@ class SearchSolver(threading.Thread):
 
     def stop(self):
         self.agent.stop()
-
+   
     def run(self):
+        profiler = cProfile.Profile()
+        profiler.enable()
+        memo = {}
        
         self.agent.search_method.stopped=True
         
         for i in self.agent.pairs:
-          teleportForklifts=copy.deepcopy(self.agent.initial_environment)
+          # memoize deepcopy
+          #teleportForklifts=copy.deepcopy(self.agent.initial_environment,memo={id(self.agent.initial_environment):self.agent.initial_environment})
+          if id(self.agent.initial_environment) in memo:
+              # If the memoized copy exists, use it directly
+              print("memoized copy exists")
+              teleportForklifts = memo[id(self.agent.initial_environment)]
+          else:
+              # Perform the deepcopy operation and store the copy in the memoization dictionary
+              teleportForklifts = copy.deepcopy(self.agent.initial_environment)
+              memo[id(self.agent.initial_environment)] = teleportForklifts
           teleportForklifts.move_object(teleportForklifts.cell_forklift.line, teleportForklifts.cell_forklift.column,i.cell1.line, i.cell1.column) 
           problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
           solution_a = self.agent.solve_problem(problem)
@@ -669,7 +683,10 @@ class SearchSolver(threading.Thread):
           
           i.value = solution_a.cost
          
-        
+        profiler.disable() 
+        profiler.print_stats(sort='cumtime')
+        print("----------------------------------------")
+        self.gui.text_problem.insert(tk.END, "Finished in:" + str() + " seconds\n")
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
