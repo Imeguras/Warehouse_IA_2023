@@ -10,6 +10,7 @@ from warehouse.heuristic_warehouse import HeuristicWarehouse
 import queue
 import threading
 import os
+import concurrent.futures
 from pathlib import Path
 
 import constants
@@ -655,19 +656,27 @@ class SearchSolver(threading.Thread):
 
     def stop(self):
         self.agent.stop()
+        
+    def process_pair(self, pair):
+        teleportForklifts = copy.deepcopy(self.agent.initial_environment)
+        teleportForklifts.move_object(teleportForklifts.cell_forklift.line, teleportForklifts.cell_forklift.column, pair.cell1.line, pair.cell1.column)
+        problem = WarehouseProblemSearch(teleportForklifts, pair.cell2)
+        solution_a = self.agent.solve_problem(problem)
+        pair.path_resolution = solution_a.actions
+        pair.value = solution_a.cost
+
 
     def run(self):
        
         self.agent.search_method.stopped=True
         
-        for i in self.agent.pairs:
-          teleportForklifts=copy.deepcopy(self.agent.initial_environment)
-          teleportForklifts.move_object(teleportForklifts.cell_forklift.line, teleportForklifts.cell_forklift.column,i.cell1.line, i.cell1.column) 
-          problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
-          solution_a = self.agent.solve_problem(problem)
-          i.path_resolution=solution_a.actions
-          
-          i.value = solution_a.cost
+        with concurrent.futures.ThreadPoolExecutor(20) as executor:
+            # Submit each iteration of the loop as a separate thread
+            futures = [executor.submit(self.process_pair, i) for i in self.agent.pairs]
+
+            # Wait for all threads to complete
+            concurrent.futures.wait(futures)
+
          
         
         self.gui.text_problem.insert(tk.END, str(self.agent))
