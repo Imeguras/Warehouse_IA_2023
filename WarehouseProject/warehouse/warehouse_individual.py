@@ -79,6 +79,18 @@ class WarehouseIndividual(IntVectorIndividual):
         real_deal = simulate_actions(path, previous_cell)
         # Concatenate the path to its corresponding sublist in actionListForklift
         cellListofLists[currentForklift] += real_deal
+      
+      # now lets force everyone back to the exit
+      for i in range(num_forklifts):
+        if len(cellListofLists[i]) > 0:
+          previous_cell = cellListofLists[i][-1]
+        else:
+          previous_cell = self.problem.agent_search.forklifts[i]
+        
+        pair_to_exit = self.get_real_pair_references(Pair(previous_cell, self.problem.agent_search.exit))
+        path_to_exit = pair_to_exit.path_resolution
+        real_deal = simulate_actions(path_to_exit, previous_cell)
+        cellListofLists[i] += real_deal
         
       return (cellListofLists, len(max(cellListofLists, key=len)))
       # actionListForklift = []

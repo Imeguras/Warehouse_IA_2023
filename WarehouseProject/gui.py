@@ -693,8 +693,7 @@ class SolutionRunner(threading.Thread):
     def run(self):
         self.thread_running = True
         forklift_path, steps = self.best_in_run.obtain_all_path()
-        print (forklift_path)
-        print (steps)
+        
         
         old_cell = [None] * len(forklift_path)
         new_cells = []
