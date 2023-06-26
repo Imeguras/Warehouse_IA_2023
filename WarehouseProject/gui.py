@@ -669,8 +669,7 @@ class SearchSolver(threading.Thread):
           # memoize deepcopy
           #teleportForklifts=copy.deepcopy(self.agent.initial_environment,memo={id(self.agent.initial_environment):self.agent.initial_environment})
           if id(self.agent.initial_environment) in memo:
-              # If the memoized copy exists, use it directly
-              print("memoized copy exists")
+            
               teleportForklifts = memo[id(self.agent.initial_environment)]
           else:
               # Perform the deepcopy operation and store the copy in the memoization dictionary
