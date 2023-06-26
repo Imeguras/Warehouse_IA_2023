@@ -11,6 +11,8 @@ import queue
 import threading
 import os
 from pathlib import Path
+import cProfile
+import pstats
 
 import constants
 from ga.genetic_operators.mutation2 import Mutation2
@@ -115,42 +117,50 @@ class Window(tk.Tk):
         self.entry_tournament_size.insert(tk.END, '2')
         self.entry_tournament_size.grid(row=4, column=1)
 
+        self.label_punish_collision = tk.Label(master=self.panel_parameters, text="Punish collision: ",
+                                                anchor="e", width=25) 
+        self.label_punish_collision.grid(row=5, column=0)
+        
+        self.entry_collision_penalty = tk.Entry(master=self.panel_parameters, width=17)
+        self.entry_collision_penalty.insert(tk.END, '10.0')
+        self.entry_collision_penalty.grid(row=5, column=1)
+        
         self.label_recombination_methods = tk.Label(master=self.panel_parameters, text="Recombination method: ",
                                                     anchor="e", width=25)
-        self.label_recombination_methods.grid(row=5, column=0)
+        self.label_recombination_methods.grid(row=6, column=0)
 
         recombination_methods = ['PMX', 'OX1', 'Cycle']
 
         self.combo_recombination_methods = ttk.Combobox(master=self.panel_parameters, state="readonly",
                                                         values=recombination_methods, width=14)
         self.combo_recombination_methods.set(recombination_methods[0])
-        self.combo_recombination_methods.grid(row=5, column=1)
+        self.combo_recombination_methods.grid(row=6, column=1)
 
         self.label_recombination_prob = tk.Label(master=self.panel_parameters, text="Recombination prob.: ",
                                                  anchor="e", width=25)
-        self.label_recombination_prob.grid(row=6, column=0)
+        self.label_recombination_prob.grid(row=7, column=0)
 
         self.entry_recombination_prob = tk.Entry(master=self.panel_parameters, width=17)
         self.entry_recombination_prob.insert(tk.END, '0.7')
-        self.entry_recombination_prob.grid(row=6, column=1)
+        self.entry_recombination_prob.grid(row=7, column=1)
 
         self.label_mutation_methods = tk.Label(master=self.panel_parameters, text="Mutation method: ",
                                                anchor="e", width=25)
-        self.label_mutation_methods.grid(row=7, column=0)
+        self.label_mutation_methods.grid(row=8, column=0)
 
         mutation_methods = ['Insert', 'Swap', 'Invert']
 
         self.combo_mutation_methods = ttk.Combobox(master=self.panel_parameters, state="readonly",
                                                    values=mutation_methods, width=14)
         self.combo_mutation_methods.set(mutation_methods[0])
-        self.combo_mutation_methods.grid(row=7, column=1)
+        self.combo_mutation_methods.grid(row=8, column=1)
 
         self.label_mutation_prob = tk.Label(master=self.panel_parameters, text="Mutation prob.: ", anchor="e", width=25)
-        self.label_mutation_prob.grid(row=8, column=0)
+        self.label_mutation_prob.grid(row=9, column=0)
 
         self.entry_mutation_prob = tk.Entry(master=self.panel_parameters, width=17)
         self.entry_mutation_prob.insert(tk.END, '0.1')
-        self.entry_mutation_prob.grid(row=8, column=1)
+        self.entry_mutation_prob.grid(row=9, column=1)
 
         # 1.1.2 Run Panel
 
@@ -340,6 +350,8 @@ class Window(tk.Tk):
         self.solver.start()
 
     def runGA_button_clicked(self):
+        profiler = cProfile.Profile()
+        profiler.enable()
         self.problem_ga = WarehouseProblemGA(self.agent_search)
         
         if self.problem_ga is None:
@@ -361,14 +373,15 @@ class Window(tk.Tk):
             float(self.entry_mutation_prob.get())) if mutation_methods_index == 0 else \
             Mutation2(float(self.entry_mutation_prob.get())) if mutation_methods_index == 1 else \
                 Mutation3(float(self.entry_mutation_prob.get()))
-
+        collision_penalty = float(self.entry_collision_penalty.get())
         self.genetic_algorithm = GeneticAlgorithmThread(
             int(self.entry_seed.get()),
             int(self.entry_population_size.get()),
             int(self.entry_num_generations.get()),
             selection_method,
             recombination_method,
-            mutation_method
+            mutation_method, 
+            collision_penalty
         )
 
         
@@ -387,7 +400,8 @@ class Window(tk.Tk):
                             open_experiments=tk.DISABLED, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
                             simulation=tk.NORMAL, stop_simulation=tk.DISABLED)
         self.entry_status.delete(0, tk.END)
-
+        
+        
     def sim_button_clicked(self):
 
         self.manage_buttons(data_set=tk.DISABLED, runSearch=tk.DISABLED, runGA=tk.DISABLED, stop=tk.DISABLED,
@@ -573,7 +587,8 @@ class Window(tk.Tk):
         except ValueError:
             messagebox.showwarning("Warning", "Population size should be an even positive integer")
             return False
-
+        
+        
         try:
             num_generations = int(self.entry_num_generations.get())
             if num_generations <= 0:
@@ -594,7 +609,15 @@ class Window(tk.Tk):
                 messagebox.showwarning("Warning", "Tournament size should be a positive integer larger than 1"
                                                   " and smaller than the population size")
                 return False
-
+        try: 
+            collision_penalty = float(self.entry_collision_penalty.get())
+            # TODO: uncomment this 
+            #if collision_penalty < 0:
+            # messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+            #  return False
+        except ValueError:
+              messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+              return False
         try:
             recombination_prob = float(self.entry_recombination_prob.get())
             if recombination_prob < 0 or recombination_prob > 1:
@@ -632,7 +655,7 @@ class ExperimentsRunner(threading.Thread):
 
     def run(self):
         self.thread_running = True
-
+    
         while self.experiments_factory.has_more_experiments() and self.thread_running:
             experiment = self.experiments_factory.next_experiment()
             experiment.run()
@@ -655,13 +678,24 @@ class SearchSolver(threading.Thread):
 
     def stop(self):
         self.agent.stop()
-
+   
     def run(self):
+        profiler = cProfile.Profile()
+        profiler.enable()
+        memo = {}
        
         self.agent.search_method.stopped=True
         
         for i in self.agent.pairs:
-          teleportForklifts=copy.deepcopy(self.agent.initial_environment)
+          # memoize deepcopy
+          #teleportForklifts=copy.deepcopy(self.agent.initial_environment,memo={id(self.agent.initial_environment):self.agent.initial_environment})
+          if id(self.agent.initial_environment) in memo:
+            
+              teleportForklifts = memo[id(self.agent.initial_environment)]
+          else:
+              # Perform the deepcopy operation and store the copy in the memoization dictionary
+              teleportForklifts = copy.deepcopy(self.agent.initial_environment)
+              memo[id(self.agent.initial_environment)] = teleportForklifts
           teleportForklifts.move_object(teleportForklifts.cell_forklift.line, teleportForklifts.cell_forklift.column,i.cell1.line, i.cell1.column) 
           problem = WarehouseProblemSearch(teleportForklifts,i.cell2)
           solution_a = self.agent.solve_problem(problem)
@@ -669,7 +703,9 @@ class SearchSolver(threading.Thread):
           
           i.value = solution_a.cost
          
-        
+        profiler.disable() 
+        profiler.print_stats(sort='tottime')
+        print("---------------SEARCH----------------")
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
@@ -692,7 +728,9 @@ class SolutionRunner(threading.Thread):
 
     def run(self):
         self.thread_running = True
-        forklift_path, steps, _irrelevant = self.best_in_run.obtain_all_path()
+        forklift_path, steps = self.best_in_run.obtain_all_path()
+        
+        
         old_cell = [None] * len(forklift_path)
         new_cells = []
         for step in range(steps - 1):
@@ -703,16 +741,19 @@ class SolutionRunner(threading.Thread):
                 if old_cell[j] is None:
                     firs_cell = forklift_path[j][0]
                     old_cell[j] = firs_cell
+                    
                 if step < len(forklift_path[j]) - 1:
+
                     if old_cell[j] not in new_cells:
-                        self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.EMPTY
+                      self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.EMPTY
                     new_cell = forklift_path[j][step + 1]
                     new_cells.append(new_cell)
                     self.state.matrix[new_cell.line][new_cell.column] = constants.FORKLIFT
                     old_cell[j] = new_cell
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
-
+               
+        
                 # TODO put the catched products in black
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
         self.gui.queue.put((None, steps, True))  # Done

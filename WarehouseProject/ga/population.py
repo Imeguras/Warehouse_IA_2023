@@ -5,7 +5,7 @@ from ga.individual import Individual
 
 class Population:
 
-    def __init__(self, size: int, problem: Problem = None):
+    def __init__(self, size: int, problem: Problem = None, collisionPunishment: float=10.0):
         self.size = size
         self.individuals = []
         self.best_individual = None
