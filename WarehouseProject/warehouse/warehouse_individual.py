@@ -17,14 +17,28 @@ class WarehouseIndividual(IntVectorIndividual):
       # Por agora self.fitness = obtain_all_path total cost
       #TODO tomar em conta colisões 
       self.fitness = 0.0
-      (palatin_matrix, _irrelevant ) = self.obtain_all_path()
+      (palatin_matrix, _max ) = self.obtain_all_path()
       # count the forklif
       
       for i in range(len(palatin_matrix)):
         #spawnar o forklift não conta como passo e para a animação não bugar precisa de spawnar 
         self.fitness += len(palatin_matrix[i])-1
       # contar colisoes
+      # percorrer palatin_matrix e ver se ha colisoes
+      for j in range(_max): 
+        temp = []
+        for i in range(len(palatin_matrix)):
+          #check if palatin_matrix[i][j] is in bounds
+          if j < len(palatin_matrix[i]) and palatin_matrix[i][j] is not None:
 
+            if palatin_matrix[i][j] is not None and palatin_matrix[i][j] in temp:
+              print("colisao"+palatin_matrix[i][j].__str__())
+              self.fitness += 10
+            temp.append(palatin_matrix[i][j])
+      
+
+
+      
 
       return self.fitness
 
@@ -101,15 +115,14 @@ class WarehouseIndividual(IntVectorIndividual):
         string += str (self.genome) + "\n\n"
         # RETODO
         return string
-
+    #def __hash__(self):
+    #  return hash(tuple(self.genome))
     def better_than(self, other: "WarehouseIndividual") -> bool:
         return True if self.fitness < other.fitness else False
 
     # __deepcopy__ is implemented here so that all individuals share the same problem instance
     def __deepcopy__(self, memo={}):
         if self in memo:
-          # If this object has already been copied, return the memoized copy
-          print("cache hit")
           return memo[self]
         new_instance = self.__class__(self.problem, self.num_genes)
         new_instance.genome = self.genome.copy()

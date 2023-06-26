@@ -7,9 +7,12 @@ from agentsearch.state import State
 from agentsearch.action import Action
 from warehouse.cell import Cell
 
+
+
+
 class WarehouseState(State[Action]):
     
-        
+    
     def __init__(self, matrix: ndarray, rows, columns, cell_forklift=Cell(0,0)):
         super().__init__()
         
@@ -38,7 +41,7 @@ class WarehouseState(State[Action]):
                   
     
 
-    
+    #@cached(max_size=1024)
     #checks if a robot can go to a certain position
     def is_passageway(self, x, y) -> bool: 
       point = self.matrix[x][y]

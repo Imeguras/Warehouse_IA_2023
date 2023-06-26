@@ -686,7 +686,7 @@ class SearchSolver(threading.Thread):
           i.value = solution_a.cost
          
         profiler.disable() 
-        profiler.print_stats(sort='cumtime')
+        profiler.print_stats(sort='tottime')
         print("---------------SEARCH----------------")
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,

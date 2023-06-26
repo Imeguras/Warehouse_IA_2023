@@ -20,7 +20,7 @@ class WarehouseProblemSearch(Problem[WarehouseState]):
             if action.is_valid(state):
                 valid_actions.append(action)
         return valid_actions
-
+    
     def get_successor(self, state: WarehouseState, action: Action) -> WarehouseState:
        
         successor = copy.deepcopy(state)

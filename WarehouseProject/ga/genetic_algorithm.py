@@ -54,7 +54,7 @@ class GeneticAlgorithm:
             self.generation += 1
             self.fire_generation_ended()
         profiler.disable() 
-        profiler.print_stats(sort='cumtime')
+        profiler.print_stats(sort='tottime')
         print("---------------GA----------------")
         self.fire_run_ended()
 
