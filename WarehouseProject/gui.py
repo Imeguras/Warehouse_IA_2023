@@ -612,10 +612,9 @@ class Window(tk.Tk):
                 return False
         try: 
             collision_penalty = float(self.entry_collision_penalty.get())
-            # TODO: uncomment this 
-            #if collision_penalty < 0:
-            # messagebox.showwarning("Warning", "Collision penalty should be a positive float")
-            #  return False
+            if collision_penalty < 0:
+             messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+            return False
         except ValueError:
               messagebox.showwarning("Warning", "Collision penalty should be a positive float")
               return False
@@ -679,7 +678,7 @@ class SearchSolver(threading.Thread):
 
     def stop(self):
         self.agent.stop()
-   
+    
     def run(self):
         profiler = cProfile.Profile()
         profiler.enable()

@@ -16,7 +16,7 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def compute_fitness(self) -> float:
       # Por agora self.fitness = obtain_all_path total cost
-      #TODO tomar em conta colisões 
+      
       self.fitness = 0.0
       (palatin_matrix, _max ) = self.obtain_all_path()
       # count the forklif
