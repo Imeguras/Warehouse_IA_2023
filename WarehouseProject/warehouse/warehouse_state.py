@@ -23,11 +23,12 @@ class WarehouseState(State[Action]):
 
         #this one is just to make the products array start at index 1
         self.products.append(Cell(0,0))
-        self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
+        self.matrix = matrix
+        #self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
       
         for i in range(self.rows):
           for j in range(self.columns):
-                self.matrix[i][j] = matrix[i][j]
+                #self.matrix[i][j] = matrix[i][j]
                 if self.matrix[i][j] == constants.PRODUCT:
                   self.products.append(Cell(i, j)) 
                 if self.matrix[i][j] == constants.FORKLIFT:
