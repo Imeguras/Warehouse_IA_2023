@@ -763,7 +763,7 @@ class SolutionRunner(threading.Thread):
                     for _cell in nearby_cells:
                       if not self.state.overflows_(_cell) and self.state.matrix[_cell.line][_cell.column] == constants.PRODUCT:
                         self.state.matrix[_cell.line][_cell.column] = constants.PRODUCT_CATCH
-                        break
+                        
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
