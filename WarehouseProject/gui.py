@@ -611,9 +611,9 @@ class Window(tk.Tk):
                 return False
         try: 
             collision_penalty = float(self.entry_collision_penalty.get())
-            if collision_penalty < 0:
-             messagebox.showwarning("Warning", "Collision penalty should be a positive float")
-            return False
+            if collision_penalty < 0.0:
+              messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+              return False
         except ValueError:
               messagebox.showwarning("Warning", "Collision penalty should be a positive float")
               return False
