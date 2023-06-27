@@ -351,8 +351,7 @@ class Window(tk.Tk):
         self.solver.start()
 
     def runGA_button_clicked(self):
-        profiler = cProfile.Profile()
-        profiler.enable()
+        
         self.problem_ga = WarehouseProblemGA(self.agent_search)
         
         if self.problem_ga is None:
@@ -678,10 +677,12 @@ class SearchSolver(threading.Thread):
 
     def stop(self):
         self.agent.stop()
+        self.search_profiler.disable() 
+        self.search_profiler.print_stats(sort='tottime')
     
     def run(self):
-        profiler = cProfile.Profile()
-        profiler.enable()
+        self.search_profiler = cProfile.Profile()
+        self.search_profiler.enable()
         memo = {}
        
         self.agent.search_method.stopped=True
@@ -703,8 +704,8 @@ class SearchSolver(threading.Thread):
           
           i.value = solution_a.cost
          
-        profiler.disable() 
-        profiler.print_stats(sort='tottime')
+        self.search_profiler.disable() 
+        self.search_profiler.print_stats(sort='tottime')
         print("---------------SEARCH----------------")
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,

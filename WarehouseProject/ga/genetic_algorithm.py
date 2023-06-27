@@ -35,11 +35,13 @@ class GeneticAlgorithm:
 
     def stop(self) -> None:
         self.stopped = True
+        self.ga_profiler.disable()
+        self.ga_profiler.print_stats(sort='tottime')
 
     def run(self) -> None:
         
-        profiler = cProfile.Profile()
-        profiler.enable()
+        self.ga_profiler = cProfile.Profile()
+        self.ga_profiler.enable()
 
         if self.problem is None:
             return None
@@ -59,8 +61,8 @@ class GeneticAlgorithm:
                 self.best_in_run = copy.deepcopy(self.population.best_individual)
             self.generation += 1
             self.fire_generation_ended()
-        profiler.disable() 
-        profiler.print_stats(sort='tottime')
+        self.ga_profiler.disable() 
+        self.ga_profiler.print_stats(sort='tottime')
         print("---------------GA----------------")
         self.fire_run_ended()
 
