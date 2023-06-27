@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import cProfile
 import pstats
+from warehouse.cell import Cell
 
 import constants
 from ga.genetic_operators.mutation2 import Mutation2
@@ -750,11 +751,21 @@ class SolutionRunner(threading.Thread):
                     new_cells.append(new_cell)
                     self.state.matrix[new_cell.line][new_cell.column] = constants.FORKLIFT
                     old_cell[j] = new_cell
+                    line = new_cell.line
+                    column = new_cell.column
+                    nearby_cells = [
+                      Cell(line-1, column),
+                      Cell(line+1, column),
+                      Cell(line, column-1),
+                      Cell(line, column+1)
+                    ]
+                   
+                    for _cell in nearby_cells:
+                      if not self.state.overflows_(_cell) and self.state.matrix[_cell.line][_cell.column] == constants.PRODUCT:
+                        self.state.matrix[_cell.line][_cell.column] = constants.PRODUCT_CATCH
+                        break
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
-               
-        
-                # TODO put the catched products in black
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
         self.gui.queue.put((None, steps, True))  # Done
 

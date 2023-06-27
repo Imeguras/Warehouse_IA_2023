@@ -18,7 +18,7 @@ class WarehouseProblemGA(Problem):
 
     def generate_individual(self) -> "WarehouseIndividual":
         # cada genoma e a permutação de todos os forklifts com todos os produtos
-        print("gerado com" + str(self.collisionPunishment))
+        
         new_individual = WarehouseIndividual(self, len(self.products), self.collisionPunishment)
         new_individual.genome = new_individual.generate_genome(len(self.products))
         # print(new_individual.genome)
