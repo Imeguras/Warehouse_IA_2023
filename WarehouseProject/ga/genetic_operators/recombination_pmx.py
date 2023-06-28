@@ -20,8 +20,6 @@ class RecombinationPMX(Recombination):
             mapping1[ind1.genome[i]] = ind2.genome[i]
             mapping2[ind2.genome[i]] = ind1.genome[i]
 
-        # Create the first child by copying the selected segment from ind1
-        # and filling in the remaining genes from ind2
         child1 = [-1] * len(ind1.genome)
         for i in range(cut1, cut2 + 1):
             child1[i] = ind1.genome[i]
@@ -32,8 +30,6 @@ class RecombinationPMX(Recombination):
                     gene = mapping1[gene]
                 child1[i] = gene
 
-        # Create the second child by copying the selected segment from ind2
-        # and filling in the remaining genes from ind1
         child2 = [-1] * len(ind1.genome)
         for i in range(cut1, cut2 + 1):
             child2[i] = ind2.genome[i]
