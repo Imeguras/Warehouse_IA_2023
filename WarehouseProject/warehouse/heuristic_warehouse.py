@@ -16,6 +16,5 @@ class HeuristicWarehouse(Heuristic[WarehouseProblemSearch, WarehouseState]):
         return h
 
     def __str__(self):
-        # TODO change the name of the heuristic
-        return ""
+        return "Euclidian Distance Heuristic"
 

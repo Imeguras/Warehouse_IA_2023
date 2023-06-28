@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import cProfile
 import pstats
+from warehouse.cell import Cell
 
 import constants
 from ga.genetic_operators.mutation2 import Mutation2
@@ -350,8 +351,7 @@ class Window(tk.Tk):
         self.solver.start()
 
     def runGA_button_clicked(self):
-        profiler = cProfile.Profile()
-        profiler.enable()
+        
         self.problem_ga = WarehouseProblemGA(self.agent_search)
         
         if self.problem_ga is None:
@@ -611,10 +611,9 @@ class Window(tk.Tk):
                 return False
         try: 
             collision_penalty = float(self.entry_collision_penalty.get())
-            # TODO: uncomment this 
-            #if collision_penalty < 0:
-            # messagebox.showwarning("Warning", "Collision penalty should be a positive float")
-            #  return False
+            if collision_penalty < 0.0:
+              messagebox.showwarning("Warning", "Collision penalty should be a positive float")
+              return False
         except ValueError:
               messagebox.showwarning("Warning", "Collision penalty should be a positive float")
               return False
@@ -678,10 +677,12 @@ class SearchSolver(threading.Thread):
 
     def stop(self):
         self.agent.stop()
-   
+        self.search_profiler.disable() 
+        self.search_profiler.print_stats(sort='tottime')
+    
     def run(self):
-        profiler = cProfile.Profile()
-        profiler.enable()
+        self.search_profiler = cProfile.Profile()
+        self.search_profiler.enable()
         memo = {}
        
         self.agent.search_method.stopped=True
@@ -703,8 +704,8 @@ class SearchSolver(threading.Thread):
           
           i.value = solution_a.cost
          
-        profiler.disable() 
-        profiler.print_stats(sort='tottime')
+        self.search_profiler.disable() 
+        self.search_profiler.print_stats(sort='tottime')
         print("---------------SEARCH----------------")
         self.gui.text_problem.insert(tk.END, str(self.agent))
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
@@ -750,11 +751,21 @@ class SolutionRunner(threading.Thread):
                     new_cells.append(new_cell)
                     self.state.matrix[new_cell.line][new_cell.column] = constants.FORKLIFT
                     old_cell[j] = new_cell
+                    line = new_cell.line
+                    column = new_cell.column
+                    nearby_cells = [
+                      Cell(line-1, column),
+                      Cell(line+1, column),
+                      Cell(line, column-1),
+                      Cell(line, column+1)
+                    ]
+                   
+                    for _cell in nearby_cells:
+                      if not self.state.overflows_(_cell) and self.state.matrix[_cell.line][_cell.column] == constants.PRODUCT:
+                        self.state.matrix[_cell.line][_cell.column] = constants.PRODUCT_CATCH
+                        
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
-               
-        
-                # TODO put the catched products in black
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
         self.gui.queue.put((None, steps, True))  # Done
 
