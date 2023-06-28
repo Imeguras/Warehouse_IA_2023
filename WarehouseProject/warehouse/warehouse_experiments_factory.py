@@ -66,7 +66,6 @@ class WarehouseExperimentsFactory(ExperimentsFactory):
         matrix, num_rows, num_columns = read_state_from_txt_file(self.get_parameter_value("Problem_file"))
 
         agent_search = WarehouseAgentSearch(WarehouseState(matrix, num_rows, num_columns))
-        # TODO calculate pair distances for experiments
 
         for i in agent_search.pairs:
             teleportForklifts=copy.deepcopy(agent_search.initial_environment)
